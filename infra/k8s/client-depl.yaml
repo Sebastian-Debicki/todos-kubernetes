@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: client-react-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: client-react
+  template:
+    metadata:
+      labels:
+        app: client-react
+    spec:
+      containers:
+        - name: client-react
+          image: ssebaa9/client-react
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: client-react-srv
+spec:
+  selector:
+    app: client-react
+  ports:
+    - name: client-react
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

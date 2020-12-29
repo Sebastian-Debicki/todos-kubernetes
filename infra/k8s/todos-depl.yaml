@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: todos-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: todos
+  template:
+    metadata:
+      labels:
+        app: todos
+    spec:
+      containers:
+        - name: todos
+          image: ssebaa9/todos
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://todos-mongo-srv:27017/todos'
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: todos-srv
+spec:
+  selector:
+    app: todos
+  ports:
+    - name: todos
+      protocol: TCP
+      port: 3000
+      targetPort: 3000

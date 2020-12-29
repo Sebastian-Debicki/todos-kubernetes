@@ -1,0 +1,24 @@
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: ingress-service
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/use-regex: 'true'
+spec:
+  rules:
+    - host: todos.pl
+      http:
+        paths:
+          - path: /api/users/?(.*)
+            backend:
+              serviceName: auth-srv
+              servicePort: 3000
+          - path: /api/todos/?(.*)
+            backend:
+              serviceName: todos-srv
+              servicePort: 3000
+          - path: /?(.*)
+            backend:
+              serviceName: client-react-srv
+              servicePort: 3000
