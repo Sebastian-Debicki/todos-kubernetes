@@ -3,13 +3,9 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 import Cookies from 'js-cookie';
 import jwt_decode from 'jwt-decode';
 
+import { routes } from './core';
 import { Auth } from 'pages/auth/containers/Auth';
 import { Todos } from 'pages/todos/containers/Todos';
-
-export enum Routes {
-  Login = '/auth',
-  Todos = '/',
-}
 
 export const Router = () => {
   const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
@@ -22,18 +18,18 @@ export const Router = () => {
     setIsUserLoggedIn(user ? true : false);
   }, []);
 
-  const routes = (
-    <Route path={Routes.Login}>
+  const basicRoutes = (
+    <Route path={routes.login}>
       {() => <Auth onLoginSucceed={() => setIsUserLoggedIn(true)} />}
     </Route>
   );
 
-  const protectedRoutes = <Route path={Routes.Todos} component={Todos} />;
+  const protectedRoutes = <Route path={routes.todos} component={Todos} />;
 
   return (
     <BrowserRouter>
-      <Redirect to={isUserLoggedIn ? Routes.Todos : Routes.Login} />
-      <Switch>{isUserLoggedIn ? protectedRoutes : routes}</Switch>
+      <Redirect to={isUserLoggedIn ? routes.todos : routes.login} />
+      <Switch>{isUserLoggedIn ? protectedRoutes : basicRoutes}</Switch>
     </BrowserRouter>
   );
 };
