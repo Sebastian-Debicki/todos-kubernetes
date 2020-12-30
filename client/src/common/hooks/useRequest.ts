@@ -9,11 +9,11 @@ interface Props<T> {
 }
 
 export const useRequest = <T>({ url, method, body, onSuccess }: Props<T>) => {
-  const [errors, setErrors] = useState<[{ message: string }] | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
   const doRequest = async (props = {}) => {
     try {
-      setErrors(null);
+      setError(null);
       // @ts-ignore
       const response = await axios[method](url, { ...body, ...props });
 
@@ -21,9 +21,9 @@ export const useRequest = <T>({ url, method, body, onSuccess }: Props<T>) => {
 
       return response.data;
     } catch (err) {
-      setErrors(err.response.data.errors);
+      setError(err.response.data.errors[0].message);
     }
   };
 
-  return { doRequest, errors };
+  return { doRequest, error };
 };
