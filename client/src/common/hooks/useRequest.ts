@@ -21,9 +21,13 @@ export const useRequest = <T>({ url, method, body, onSuccess }: Props<T>) => {
 
       return response.data;
     } catch (err) {
-      setError(err.response.data.errors[0].message);
+      setError(
+        err.response.data.errors[0].message
+          ? err.response.data.errors[0].message
+          : 'Sorry! Some error occured!'
+      );
     }
   };
 
-  return { doRequest, error };
+  return { doRequest, error, setError };
 };

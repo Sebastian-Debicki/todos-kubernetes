@@ -15,26 +15,6 @@ import {
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
-const useStyles = makeStyles((theme) => ({
-  paper: {
-    marginTop: theme.spacing(8),
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'center',
-  },
-  avatar: {
-    margin: theme.spacing(1),
-    backgroundColor: theme.palette.secondary.main,
-  },
-  form: {
-    width: '100%', // Fix IE 11 issue.
-    marginTop: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
 interface Props {
   onLoginSucceed: () => void;
 }
@@ -47,7 +27,7 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
 
   const classes = useStyles();
 
-  const { doRequest, error } = useRequest({
+  const { doRequest, error, setError } = useRequest({
     method: 'post',
     url: isLoginForm ? restApiRoutes.signin : restApiRoutes.signup,
     body: {
@@ -110,7 +90,13 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
             value={password}
           />
 
-          <Button variant="contained" color="primary" fullWidth type="submit">
+          <Button
+            variant="contained"
+            color="primary"
+            fullWidth
+            type="submit"
+            className={classes.submit}
+          >
             {isLoginForm ? 'Login' : 'Register'}
           </Button>
         </form>
@@ -119,8 +105,7 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
       <Button
         fullWidth
         variant="outlined"
-        color="primary"
-        className={classes.submit}
+        color="default"
         onClick={() => setIsLoginForm(!isLoginForm)}
       >{`Switch to ${isLoginForm ? 'Registration' : 'Login'} form`}</Button>
 
@@ -131,7 +116,27 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
         </Typography>
       </Box>
 
-      <Error error={error} />
+      <Error error={error} onClose={() => setError(null)} />
     </Container>
   );
 };
+
+const useStyles = makeStyles((theme) => ({
+  paper: {
+    marginTop: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
+  },
+  avatar: {
+    margin: theme.spacing(1),
+    backgroundColor: theme.palette.secondary.main,
+  },
+  form: {
+    width: '100%',
+    marginTop: theme.spacing(1),
+  },
+  submit: {
+    margin: theme.spacing(3, 0, 2),
+  },
+}));

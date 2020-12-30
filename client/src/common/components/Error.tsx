@@ -4,13 +4,16 @@ import MuiAlert from '@material-ui/lab/Alert';
 
 interface Props {
   error: string | null;
+  onClose: () => void;
 }
 
-export const Error: React.FC<Props> = ({ error }) => (
+export const Error: React.FC<Props> = ({ error, onClose }) => (
   <Snackbar
     open={!!error}
-    // autoHideDuration={1000}
+    autoHideDuration={4000}
+    onClose={onClose}
     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+    key={error}
   >
     <MuiAlert variant="filled" severity="error">
       {error}
