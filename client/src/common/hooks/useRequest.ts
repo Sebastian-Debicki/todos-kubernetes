@@ -1,21 +1,30 @@
 import axios, { AxiosResponse } from 'axios';
 import { useState } from 'react';
 
-interface Props<T> {
+interface Props<B, R> {
   url: string;
   method: 'get' | 'post' | 'delete' | 'patch';
-  body: T;
-  onSuccess?: (response: AxiosResponse) => void;
+  body: B;
+  onSuccess?: (response: R) => void;
 }
 
-export const useRequest = <T>({ url, method, body, onSuccess }: Props<T>) => {
+export const useRequest = <B, R>({
+  url,
+  method,
+  body,
+  onSuccess,
+}: Props<B, R>) => {
   const [error, setError] = useState<string | null>(null);
 
-  const doRequest = async (props = {}) => {
+  const doRequest = async (): Promise<R | undefined> => {
     try {
       setError(null);
-      // @ts-ignore
-      const response = await axios[method](url, { ...body, ...props });
+
+      const response: AxiosResponse<R> = await axios({
+        method,
+        url,
+        data: body,
+      });
 
       if (onSuccess) onSuccess(response.data);
 

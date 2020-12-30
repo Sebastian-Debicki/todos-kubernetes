@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Cookies from 'js-cookie';
 
-import { useRequest, Error } from 'common';
+import { useRequest, Error, Credentials, AuthResponse } from 'common';
 import { restApiRoutes, routes } from 'core';
 import { useHistory } from 'react-router-dom';
 import {
@@ -27,7 +27,7 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
 
   const classes = useStyles();
 
-  const { doRequest, error, setError } = useRequest({
+  const { doRequest, error, setError } = useRequest<Credentials, AuthResponse>({
     method: 'post',
     url: isLoginForm ? restApiRoutes.signin : restApiRoutes.signup,
     body: {
@@ -42,9 +42,7 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
 
   const onSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
-    await doRequest()
-      .then((res) => Cookies.set('token', res.token))
-      .catch((err) => console.warn(err));
+    await doRequest().then((res) => res && Cookies.set('token', res.token));
   };
 
   return (
