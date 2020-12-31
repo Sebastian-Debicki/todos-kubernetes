@@ -1,18 +1,22 @@
 import React from 'react';
+import { Snackbar } from '@material-ui/core';
+import MuiAlert from '@material-ui/lab/Alert';
 
 interface Props {
-  errors: [{ message: string }];
+  error: string | null;
+  onClose: () => void;
 }
 
-export const Error: React.FC<Props> = ({ errors }) => (
-  <div>
-    <div className="alert alert-danger">
-      <h4>Ooops....</h4>
-      <ul className="my-0">
-        {errors.map((err) => (
-          <li key={err.message}>{err.message}</li>
-        ))}
-      </ul>
-    </div>
-  </div>
+export const Error: React.FC<Props> = ({ error, onClose }) => (
+  <Snackbar
+    open={!!error}
+    autoHideDuration={4000}
+    onClose={onClose}
+    anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+    key={error}
+  >
+    <MuiAlert variant="filled" severity="error">
+      {error}
+    </MuiAlert>
+  </Snackbar>
 );
