@@ -1,22 +1,22 @@
 import * as React from 'react';
 
-import { Container, TextField, Button } from '@material-ui/core';
-import { useRequest, Error, Todo } from 'common';
+import { Container, TextField, Button, Grid } from '@material-ui/core';
+import { useRequest, Error, Todo, Card } from 'common';
 import { restApiRoutes } from 'core';
 
 export const Todos = () => {
   const [todos, setTodos] = React.useState<Todo[]>([]);
-  const [todo, setTodo] = React.useState('');
+  const [todoTitle, setTodoTitle] = React.useState('');
 
   const { doRequest: addTodoRequest, error, setError } = useRequest<Todo, Todo>(
     {
       method: 'post',
       url: restApiRoutes.todos,
       body: {
-        title: todo,
+        title: todoTitle,
       },
       onSuccess: () => {
-        setTodo('');
+        setTodoTitle('');
       },
     }
   );
@@ -25,7 +25,7 @@ export const Todos = () => {
     method: 'get',
     url: restApiRoutes.todos,
     body: {},
-    onSuccess: (res) => setTodos(res),
+    onSuccess: (todos) => setTodos(todos),
   });
 
   React.useEffect(() => {
@@ -42,8 +42,8 @@ export const Todos = () => {
         id="todo"
         label="Todo"
         name="todo"
-        value={todo}
-        onChange={(e) => setTodo(e.target.value)}
+        value={todoTitle}
+        onChange={(e) => setTodoTitle(e.target.value)}
       />
       <Button
         onClick={() => addTodoRequest()}
@@ -55,9 +55,13 @@ export const Todos = () => {
         Add
       </Button>
 
-      {todos.map((todo) => (
-        <p>{todo.title}</p>
-      ))}
+      <Grid container spacing={3}>
+        {todos.map((todo) => (
+          <Grid item xs={12} sm={6} md={4}>
+            <Card title={todo.title} />
+          </Grid>
+        ))}
+      </Grid>
 
       <Error error={error} onClose={() => setError(null)} />
     </Container>
