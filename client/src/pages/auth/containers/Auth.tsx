@@ -27,22 +27,27 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
 
   const classes = useStyles();
 
-  const { doRequest, error, setError } = useRequest<Credentials, AuthResponse>({
+  const { doRequest, error, cleanError } = useRequest<
+    Credentials,
+    AuthResponse,
+    void
+  >({
     method: 'post',
-    url: isLoginForm ? restApiRoutes.signin : restApiRoutes.signup,
+    url: () => (isLoginForm ? restApiRoutes.signin : restApiRoutes.signup),
     body: {
       email,
       password,
     },
-    onSuccess: () => {
+    onSuccess: (res) => {
       onLoginSucceed();
       history.push(routes.todos);
+      Cookies.set('token', res.token);
     },
   });
 
   const onSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
-    await doRequest().then((res) => res && Cookies.set('token', res.token));
+    await doRequest();
   };
 
   return (
@@ -114,7 +119,7 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
         </Typography>
       </Box>
 
-      <Error error={error} onClose={() => setError(null)} />
+      <Error error={error} onClose={cleanError} />
     </Container>
   );
 };

@@ -1,32 +1,45 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosResponse, Method } from 'axios';
 import { useState } from 'react';
 
-interface Props<B, R> {
-  url: string;
-  method: 'get' | 'post' | 'delete' | 'patch';
+interface Props<B, R, A> {
+  url: (args?: A) => string;
+  method: Method;
   body: B;
-  onSuccess?: (response: R) => void;
+  onSuccess?: (response: R, args?: A) => void;
 }
 
-export const useRequest = <B, R>({
+/**
+ * useRequest takes three arguments
+ ** B: body - object send to the server
+ ** R: response from the server
+ ** A: optionsl argument that you want to pass to doRequest fn, when is no argument just use void
+ */
+export const useRequest = <B, R, A>({
   url,
   method,
   body,
   onSuccess,
-}: Props<B, R>) => {
+}: Props<B, R, A>) => {
   const [error, setError] = useState<string | null>(null);
 
-  const doRequest = async (): Promise<R | undefined> => {
+  const cleanError = () => setError(null);
+
+  /**
+   * doRequest fn
+   ** optional take one argument than you can get from url fn and onSuccess fn
+   ** e.q you need to pass id
+   */
+  const doRequest = async (args?: A): Promise<R | undefined> => {
     try {
-      setError(null);
+      cleanError();
 
       const response: AxiosResponse<R> = await axios({
         method,
-        url,
+        url: url(args),
         data: body,
       });
 
-      if (onSuccess) onSuccess(response.data);
+      if (onSuccess) onSuccess(response.data, args);
 
       return response.data;
     } catch (err) {
@@ -38,5 +51,5 @@ export const useRequest = <B, R>({
     }
   };
 
-  return { doRequest, error, setError };
+  return { doRequest, error, cleanError };
 };
