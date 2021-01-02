@@ -1,2 +1,2 @@
 export { Error } from './Error';
-export { Card } from './Card';
+export { Navbar } from './Navbar';

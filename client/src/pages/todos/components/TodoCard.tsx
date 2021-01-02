@@ -1,44 +1,47 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import MaterialCard from '@material-ui/core/Card';
+import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
+import { Todo } from 'common/models';
+
 interface Props {
-  title: string;
+  todo: Todo;
+  onDelete: () => void;
 }
 
-export const Card: React.FC<Props> = ({ title }) => {
+export const TodoCard: React.FC<Props> = ({ todo, onDelete }) => {
   const classes = useStyles();
 
   return (
-    <MaterialCard className={classes.root}>
+    <Card className={classes.root}>
       <CardContent>
         <Typography
-          className={classes.title}
+          className={classes.subject}
           color="textSecondary"
           gutterBottom
         >
-          Word of the Day
+          {todo.subject}
         </Typography>
         <Typography variant="h5" component="h2">
-          {title}
+          {todo.title}
         </Typography>
-        <Typography className={classes.pos} color="textSecondary">
+        {/* <Typography className={classes.pos} color="textSecondary">
           adjective
-        </Typography>
+        </Typography> */}
         <Typography variant="body2" component="p">
-          well meaning and kindly.
-          <br />
-          {'"a benevolent smile"'}
+          {todo.description}
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="small">Learn More</Button>
+        <Button onClick={onDelete} size="small">
+          Delete
+        </Button>
       </CardActions>
-    </MaterialCard>
+    </Card>
   );
 };
 
@@ -46,7 +49,7 @@ const useStyles = makeStyles({
   root: {
     minWidth: 275,
   },
-  title: {
+  subject: {
     fontSize: 14,
   },
   pos: {
