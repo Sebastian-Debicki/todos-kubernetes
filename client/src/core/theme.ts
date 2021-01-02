@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { blueGrey, green } from '@material-ui/core/colors';
+import { blueGrey, grey } from '@material-ui/core/colors';
 
 export const theme = (isDarkTheme: boolean) =>
   createMuiTheme({
@@ -9,7 +9,7 @@ export const theme = (isDarkTheme: boolean) =>
         main: blueGrey[500],
       },
       secondary: {
-        main: green[400],
+        main: grey[800],
       },
     },
   });

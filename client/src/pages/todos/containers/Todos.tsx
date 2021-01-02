@@ -1,30 +1,43 @@
 import * as React from 'react';
+import { Container, Button, Grid } from '@material-ui/core';
 
-import { Container, TextField, Button, Grid } from '@material-ui/core';
-import { useRequest, Error, Todo, Modal } from 'common';
+import { useRequest, Error, Todo, Modal, TodoBody } from 'common';
 import { restApiRoutes } from 'core';
 import { TodoCard } from '../components/TodoCard';
+import { AddTodoForm } from '../components/AddTodoForm';
 
 export const Todos = () => {
   const [todos, setTodos] = React.useState<Todo[]>([]);
-  const [title, setTitle] = React.useState('');
+  const [todo, setTodo] = React.useState<TodoBody>({
+    title: '',
+    description: '',
+    subject: '',
+    important: false,
+  });
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const { doRequest: addTodoRequest, error, cleanError } = useRequest<
-    Omit<Todo, 'id'>,
+    TodoBody,
     Todo,
     void
   >({
     method: 'post',
     url: () => restApiRoutes.todos,
     body: {
-      title,
-      description: 'todo description',
-      important: false,
-      subject: 'trening',
+      title: todo.title,
+      description: todo.description,
+      subject: todo.subject,
+      important: todo.important,
     },
-    onSuccess: (todo) => {
-      setTodos([...todos, todo]);
-      setTitle('');
+    onSuccess: (newTodo) => {
+      setTodos([...todos, newTodo]);
+      setTodo({
+        title: '',
+        description: '',
+        subject: '',
+        important: false,
+      });
+      setIsModalOpen(false);
     },
   });
 
@@ -53,7 +66,7 @@ export const Todos = () => {
     <Container>
       <Button
         style={{ marginTop: 20, marginBottom: 20 }}
-        onClick={() => addTodoRequest()}
+        onClick={() => setIsModalOpen(true)}
         variant="contained"
         color="secondary"
       >
@@ -68,19 +81,12 @@ export const Todos = () => {
         ))}
       </Grid>
 
-      <Modal>
-        <form>
-          <TextField />
-          <Button
-            style={{ marginTop: 20, marginBottom: 20 }}
-            onClick={() => addTodoRequest()}
-            variant="outlined"
-            color="secondary"
-            type="submit"
-          >
-            Add todo
-          </Button>
-        </form>
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <AddTodoForm
+          todo={todo}
+          setTodo={setTodo}
+          onAddTodo={() => addTodoRequest()}
+        />
       </Modal>
 
       <Error error={error} onClose={cleanError} />

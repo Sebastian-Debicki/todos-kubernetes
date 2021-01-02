@@ -6,7 +6,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { Router } from './Router';
 import { theme } from 'core';
-import { Navbar, Modal } from 'common';
+import { Navbar } from 'common';
 
 function App() {
   const [isUserLoggedIn, setIsUserLoggedIn] = React.useState(false);
