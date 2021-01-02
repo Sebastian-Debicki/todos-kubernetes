@@ -1,7 +1,7 @@
 import * as React from 'react';
 
 import { Container, TextField, Button, Grid } from '@material-ui/core';
-import { useRequest, Error, Todo } from 'common';
+import { useRequest, Error, Todo, Modal } from 'common';
 import { restApiRoutes } from 'core';
 import { TodoCard } from '../components/TodoCard';
 
@@ -51,25 +51,13 @@ export const Todos = () => {
 
   return (
     <Container>
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        id="todo"
-        label="Todo"
-        name="todo"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
       <Button
+        style={{ marginTop: 20, marginBottom: 20 }}
         onClick={() => addTodoRequest()}
         variant="contained"
-        color="primary"
-        fullWidth
-        type="submit"
+        color="secondary"
       >
-        Add
+        Add todo
       </Button>
 
       <Grid container spacing={3}>
@@ -79,6 +67,21 @@ export const Todos = () => {
           </Grid>
         ))}
       </Grid>
+
+      <Modal>
+        <form>
+          <TextField />
+          <Button
+            style={{ marginTop: 20, marginBottom: 20 }}
+            onClick={() => addTodoRequest()}
+            variant="outlined"
+            color="secondary"
+            type="submit"
+          >
+            Add todo
+          </Button>
+        </form>
+      </Modal>
 
       <Error error={error} onClose={cleanError} />
     </Container>

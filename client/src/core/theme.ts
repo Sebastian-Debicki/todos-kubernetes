@@ -9,7 +9,7 @@ export const theme = (isDarkTheme: boolean) =>
         main: blueGrey[500],
       },
       secondary: {
-        main: green[900],
+        main: green[400],
       },
     },
   });

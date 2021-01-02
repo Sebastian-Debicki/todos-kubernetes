@@ -22,14 +22,6 @@ export const Navbar: React.FC<Props> = ({ onChangeTheme, isDarkTheme }) => {
     <div className={classes.root}>
       <AppBar position="static">
         <Toolbar>
-          <IconButton
-            edge="start"
-            className={classes.menuButton}
-            color="inherit"
-            aria-label="menu"
-          >
-            <MenuIcon />
-          </IconButton>
           <Typography variant="h6" className={classes.title}>
             Todos
           </Typography>
@@ -46,11 +38,6 @@ export const Navbar: React.FC<Props> = ({ onChangeTheme, isDarkTheme }) => {
               label="Theme"
             />
           </FormGroup>
-          <div>
-            <IconButton color="inherit">
-              <Add />
-            </IconButton>
-          </div>
         </Toolbar>
       </AppBar>
     </div>

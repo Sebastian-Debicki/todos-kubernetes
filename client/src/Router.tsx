@@ -1,26 +1,19 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
-import Cookies from 'js-cookie';
-import jwt_decode from 'jwt-decode';
 
 import { routes } from './core';
 import { Auth } from 'pages/auth/containers/Auth';
 import { Todos } from 'pages/todos/containers/Todos';
 
-export const Router = () => {
-  const [isUserLoggedIn, setIsUserLoggedIn] = useState(false);
+interface Props {
+  isUserLoggedIn: boolean;
+  onLoginSucceed: () => void;
+}
 
-  useEffect(() => {
-    const token = Cookies.get('token');
-
-    const user = token && jwt_decode(token);
-
-    setIsUserLoggedIn(user ? true : false);
-  }, []);
-
+export const Router: React.FC<Props> = ({ isUserLoggedIn, onLoginSucceed }) => {
   const basicRoutes = (
     <Route path={routes.login}>
-      {() => <Auth onLoginSucceed={() => setIsUserLoggedIn(true)} />}
+      {() => <Auth onLoginSucceed={onLoginSucceed} />}
     </Route>
   );
 
