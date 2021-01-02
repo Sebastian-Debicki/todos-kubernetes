@@ -29,9 +29,6 @@ export const TodoCard: React.FC<Props> = ({ todo, onDelete }) => {
         <Typography variant="h5" component="h2">
           {todo.title}
         </Typography>
-        {/* <Typography className={classes.pos} color="textSecondary">
-          adjective
-        </Typography> */}
         <Typography variant="body2" component="p">
           {todo.description}
         </Typography>

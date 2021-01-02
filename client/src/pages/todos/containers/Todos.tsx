@@ -1,13 +1,14 @@
 import * as React from 'react';
 import { Container, Button, Grid } from '@material-ui/core';
 
-import { useRequest, Error, Todo, Modal, TodoBody } from 'common';
+import { useRequest, Error, Todo, Modal, TodoBody, ConfirmModal } from 'common';
 import { restApiRoutes } from 'core';
 import { TodoCard } from '../components/TodoCard';
 import { AddTodoForm } from '../components/AddTodoForm';
 
 export const Todos = () => {
   const [todos, setTodos] = React.useState<Todo[]>([]);
+  const [todoId, setTodoId] = React.useState<string | null>(null);
   const [todo, setTodo] = React.useState<TodoBody>({
     title: '',
     description: '',
@@ -15,6 +16,7 @@ export const Todos = () => {
     important: false,
   });
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState(false);
 
   const { doRequest: addTodoRequest, error, cleanError } = useRequest<
     TodoBody,
@@ -50,13 +52,23 @@ export const Todos = () => {
 
   const { doRequest: deleteTodoRequest } = useRequest<{}, void, string>({
     method: 'delete',
-    url: (id) => `${restApiRoutes.todos}/${id}`,
+    url: () => `${restApiRoutes.todos}/${todoId}`,
     body: {},
-    onSuccess: (res, id) => {
-      const filteredTodos = todos.filter((todo) => todo.id !== id);
+    onSuccess: () => {
+      const filteredTodos = todos.filter((todo) => todo.id !== todoId);
       setTodos(filteredTodos);
     },
   });
+
+  const openConfirmModal = (id: string) => {
+    setIsConfirmModalOpen(true);
+    setTodoId(id);
+  };
+
+  const onDeleteTodo = (isConfirmed: boolean) => {
+    if (isConfirmed) deleteTodoRequest();
+    else return;
+  };
 
   React.useEffect(() => {
     getTodosRequest();
@@ -76,7 +88,7 @@ export const Todos = () => {
       <Grid container spacing={3}>
         {todos.map((todo) => (
           <Grid key={todo.id} item xs={12} sm={6} md={4}>
-            <TodoCard todo={todo} onDelete={() => deleteTodoRequest(todo.id)} />
+            <TodoCard todo={todo} onDelete={() => openConfirmModal(todo.id)} />
           </Grid>
         ))}
       </Grid>
@@ -88,6 +100,12 @@ export const Todos = () => {
           onAddTodo={() => addTodoRequest()}
         />
       </Modal>
+
+      <ConfirmModal
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
+        onConfirm={(isConfirmed) => onDeleteTodo(isConfirmed)}
+      />
 
       <Error error={error} onClose={cleanError} />
     </Container>
