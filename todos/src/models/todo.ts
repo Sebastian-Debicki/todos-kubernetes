@@ -2,11 +2,17 @@ import mongoose from 'mongoose';
 
 interface TodoAttrs {
   title: string;
+  subject: string;
+  description: string;
+  important: boolean;
   userId: string;
 }
 
 interface TodoDoc extends mongoose.Document {
   title: string;
+  subject: string;
+  description: string;
+  important: boolean;
   userId: string;
 }
 
@@ -18,6 +24,17 @@ const todoSchema = new mongoose.Schema(
   {
     title: {
       type: String,
+      required: true,
+    },
+    subject: {
+      type: String,
+      required: true,
+    },
+    description: {
+      type: String,
+    },
+    important: {
+      type: Boolean,
       required: true,
     },
     userId: {

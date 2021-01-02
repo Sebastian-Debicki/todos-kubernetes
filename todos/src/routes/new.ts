@@ -8,13 +8,23 @@ const router = express.Router();
 router.post(
   '/api/todos',
   requireAuth,
-  [body('title').not().isEmpty().withMessage('Title is required')],
+  [
+    body('title').not().isEmpty().withMessage('Title is required'),
+    body('subject').not().isEmpty().withMessage('Subject is required'),
+    body('important')
+      .not()
+      .isEmpty()
+      .withMessage('Important field is required'),
+  ],
   validateRequest,
   async (req: Request, res: Response) => {
-    const { title } = req.body;
+    const { title, subject, description, important } = req.body;
 
     const todo = Todo.build({
       title,
+      subject,
+      description,
+      important,
       userId: req.currentUser!.id,
     });
     await todo.save();

@@ -8,6 +8,7 @@ import { createTodoRouter } from './routes/new';
 import { showTodoRouter } from './routes/show';
 import { indexTodoRouter } from './routes/index';
 import { updateTodoRouter } from './routes/update';
+import { deleteTodoRouter } from './routes/delete';
 
 const app = express();
 app.set('trust proxy', true);
@@ -24,6 +25,7 @@ app.use(createTodoRouter);
 app.use(showTodoRouter);
 app.use(indexTodoRouter);
 app.use(updateTodoRouter);
+app.use(deleteTodoRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();
