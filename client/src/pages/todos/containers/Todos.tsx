@@ -8,7 +8,7 @@ import { AddTodoForm } from '../components/AddTodoForm';
 
 export const Todos = () => {
   const [todos, setTodos] = React.useState<Todo[]>([]);
-  const [todoId, setTodoId] = React.useState<string | null>(null);
+  const [pickedTodo, setPickedTodo] = React.useState<Todo | null>(null);
   const [todo, setTodo] = React.useState<TodoBody>({
     title: '',
     description: '',
@@ -16,7 +16,6 @@ export const Todos = () => {
     important: false,
   });
   const [isModalOpen, setIsModalOpen] = React.useState(false);
-  const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState(false);
 
   const { doRequest: addTodoRequest, error, cleanError } = useRequest<
     TodoBody,
@@ -52,23 +51,13 @@ export const Todos = () => {
 
   const { doRequest: deleteTodoRequest } = useRequest<{}, void, string>({
     method: 'delete',
-    url: () => `${restApiRoutes.todos}/${todoId}`,
+    url: (id) => `${restApiRoutes.todos}/${id}`,
     body: {},
-    onSuccess: () => {
-      const filteredTodos = todos.filter((todo) => todo.id !== todoId);
+    onSuccess: (res, id) => {
+      const filteredTodos = todos.filter((todo) => todo.id !== id);
       setTodos(filteredTodos);
     },
   });
-
-  const openConfirmModal = (id: string) => {
-    setIsConfirmModalOpen(true);
-    setTodoId(id);
-  };
-
-  const onDeleteTodo = (isConfirmed: boolean) => {
-    if (isConfirmed) deleteTodoRequest();
-    else return;
-  };
 
   React.useEffect(() => {
     getTodosRequest();
@@ -88,7 +77,7 @@ export const Todos = () => {
       <Grid container spacing={3}>
         {todos.map((todo) => (
           <Grid key={todo.id} item xs={12} sm={6} md={4}>
-            <TodoCard todo={todo} onDelete={() => openConfirmModal(todo.id)} />
+            <TodoCard todo={todo} onDelete={() => setPickedTodo(todo)} />
           </Grid>
         ))}
       </Grid>
@@ -102,9 +91,12 @@ export const Todos = () => {
       </Modal>
 
       <ConfirmModal
-        isOpen={isConfirmModalOpen}
-        onClose={() => setIsConfirmModalOpen(false)}
-        onConfirm={(isConfirmed) => onDeleteTodo(isConfirmed)}
+        isOpen={!!pickedTodo}
+        onClose={() => setPickedTodo(null)}
+        onConfirm={(isConfirmed) => {
+          if (!isConfirmed) return;
+          pickedTodo && deleteTodoRequest(pickedTodo.id);
+        }}
       />
 
       <Error error={error} onClose={cleanError} />
