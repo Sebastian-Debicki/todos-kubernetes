@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { Container, Button, Grid } from '@material-ui/core';
+import { Container, Button, Grid, makeStyles } from '@material-ui/core';
 
 import { useRequest, Error, Todo, Modal, TodoBody, ConfirmModal } from 'common';
 import { restApiRoutes } from 'core';
@@ -16,6 +16,8 @@ export const Todos = () => {
     important: false,
   });
   const [isModalOpen, setIsModalOpen] = React.useState(false);
+
+  const classes = useStyles();
 
   const { doRequest: addTodoRequest, error, cleanError } = useRequest<
     TodoBody,
@@ -61,12 +63,12 @@ export const Todos = () => {
 
   React.useEffect(() => {
     getTodosRequest();
-  }, []);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <Container>
       <Button
-        style={{ marginTop: 20, marginBottom: 20 }}
+        className={classes.button}
         onClick={() => setIsModalOpen(true)}
         variant="contained"
         color="secondary"
@@ -103,3 +105,9 @@ export const Todos = () => {
     </Container>
   );
 };
+
+const useStyles = makeStyles((theme) => ({
+  button: {
+    margin: theme.spacing(3, 0),
+  },
+}));

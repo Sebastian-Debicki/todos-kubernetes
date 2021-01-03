@@ -18,9 +18,16 @@ function App() {
       setIsUserLoggedIn(currentUser ? true : false),
   });
 
+  const { doRequest: onLogout } = useRequest<{}, void, void>({
+    url: () => restApiRoutes.logout,
+    method: 'post',
+    body: {},
+    onSuccess: () => setIsUserLoggedIn(false),
+  });
+
   React.useEffect(() => {
     doRequest();
-  }, []);
+  }, [doRequest]);
 
   const onChangeTheme = (theme: boolean) => {
     setIsDarkTheme(theme);
@@ -30,7 +37,11 @@ function App() {
     <>
       <ThemeProvider theme={theme(isDarkTheme)}>
         <CssBaseline />
-        <Navbar onChangeTheme={onChangeTheme} isDarkTheme={isDarkTheme} />
+        <Navbar
+          onChangeTheme={onChangeTheme}
+          isDarkTheme={isDarkTheme}
+          onLogout={() => onLogout()}
+        />
         <Router
           onLoginSucceed={() => setIsUserLoggedIn(true)}
           isUserLoggedIn={isUserLoggedIn}
