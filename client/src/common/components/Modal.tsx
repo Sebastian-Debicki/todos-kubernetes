@@ -32,7 +32,7 @@ export const Modal: React.FC<Props> = ({ children, isOpen, onClose }) => {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
-      padding: theme.spacing(3),
+      padding: theme.spacing(4),
       outline: 'none',
       borderRadius: 8,
       minWidth: 320,
