@@ -1,23 +1,25 @@
 import * as React from 'react';
-import Cookies from 'js-cookie';
-import jwt_decode from 'jwt-decode';
 import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { Router } from './Router';
-import { theme } from 'core';
-import { Navbar } from 'common';
+import { restApiRoutes, theme } from 'core';
+import { Navbar, useRequest, Error, CurrentUser } from 'common';
 
 function App() {
   const [isUserLoggedIn, setIsUserLoggedIn] = React.useState(false);
   const [isDarkTheme, setIsDarkTheme] = React.useState(true);
 
+  const { doRequest, error, cleanError } = useRequest<{}, CurrentUser, void>({
+    url: () => restApiRoutes.currentUser,
+    method: 'get',
+    body: {},
+    onSuccess: ({ currentUser }) =>
+      setIsUserLoggedIn(currentUser ? true : false),
+  });
+
   React.useEffect(() => {
-    const token = Cookies.get('token');
-
-    const user = token && jwt_decode(token);
-
-    setIsUserLoggedIn(user ? true : false);
+    doRequest();
   }, []);
 
   const onChangeTheme = (theme: boolean) => {
@@ -33,6 +35,7 @@ function App() {
           onLoginSucceed={() => setIsUserLoggedIn(true)}
           isUserLoggedIn={isUserLoggedIn}
         />
+        <Error error={error} onClose={cleanError} />
       </ThemeProvider>
     </>
   );

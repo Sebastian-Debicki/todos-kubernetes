@@ -1,7 +1,6 @@
 import * as React from 'react';
-import Cookies from 'js-cookie';
 
-import { useRequest, Error, Credentials, AuthResponse } from 'common';
+import { useRequest, Error, Credentials, UserResponse } from 'common';
 import { restApiRoutes, routes } from 'core';
 import { useHistory } from 'react-router-dom';
 import {
@@ -29,7 +28,7 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
 
   const { doRequest, error, cleanError } = useRequest<
     Credentials,
-    AuthResponse,
+    UserResponse,
     void
   >({
     method: 'post',
@@ -38,10 +37,9 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
       email,
       password,
     },
-    onSuccess: (res) => {
+    onSuccess: () => {
       onLoginSucceed();
       history.push(routes.todos);
-      Cookies.set('token', res.token);
     },
   });
 

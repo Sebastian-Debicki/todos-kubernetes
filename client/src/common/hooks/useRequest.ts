@@ -27,7 +27,7 @@ export const useRequest = <B, R, A>({
   /**
    * doRequest fn
    ** optional take one argument than you can get from url fn and onSuccess fn
-   ** e.q you need to pass id
+   ** this is useful e.q when you need to pass id
    */
   const doRequest = async (args?: A): Promise<R | undefined> => {
     try {
