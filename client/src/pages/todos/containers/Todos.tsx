@@ -1,30 +1,44 @@
 import * as React from 'react';
+import { Container, Button, Grid } from '@material-ui/core';
 
-import { Container, TextField, Button, Grid } from '@material-ui/core';
-import { useRequest, Error, Todo } from 'common';
+import { useRequest, Error, Todo, Modal, TodoBody, ConfirmModal } from 'common';
 import { restApiRoutes } from 'core';
 import { TodoCard } from '../components/TodoCard';
+import { AddTodoForm } from '../components/AddTodoForm';
 
 export const Todos = () => {
   const [todos, setTodos] = React.useState<Todo[]>([]);
-  const [title, setTitle] = React.useState('');
+  const [pickedTodo, setPickedTodo] = React.useState<Todo | null>(null);
+  const [todo, setTodo] = React.useState<TodoBody>({
+    title: '',
+    description: '',
+    subject: '',
+    important: false,
+  });
+  const [isModalOpen, setIsModalOpen] = React.useState(false);
 
   const { doRequest: addTodoRequest, error, cleanError } = useRequest<
-    Omit<Todo, 'id'>,
+    TodoBody,
     Todo,
     void
   >({
     method: 'post',
     url: () => restApiRoutes.todos,
     body: {
-      title,
-      description: 'todo description',
-      important: false,
-      subject: 'trening',
+      title: todo.title,
+      description: todo.description,
+      subject: todo.subject,
+      important: todo.important,
     },
-    onSuccess: (todo) => {
-      setTodos([...todos, todo]);
-      setTitle('');
+    onSuccess: (newTodo) => {
+      setTodos([...todos, newTodo]);
+      setTodo({
+        title: '',
+        description: '',
+        subject: '',
+        important: false,
+      });
+      setIsModalOpen(false);
     },
   });
 
@@ -51,34 +65,39 @@ export const Todos = () => {
 
   return (
     <Container>
-      <TextField
-        variant="outlined"
-        margin="normal"
-        required
-        fullWidth
-        id="todo"
-        label="Todo"
-        name="todo"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
       <Button
-        onClick={() => addTodoRequest()}
+        style={{ marginTop: 20, marginBottom: 20 }}
+        onClick={() => setIsModalOpen(true)}
         variant="contained"
-        color="primary"
-        fullWidth
-        type="submit"
+        color="secondary"
       >
-        Add
+        Add todo
       </Button>
 
       <Grid container spacing={3}>
         {todos.map((todo) => (
           <Grid key={todo.id} item xs={12} sm={6} md={4}>
-            <TodoCard todo={todo} onDelete={() => deleteTodoRequest(todo.id)} />
+            <TodoCard todo={todo} onDelete={() => setPickedTodo(todo)} />
           </Grid>
         ))}
       </Grid>
+
+      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
+        <AddTodoForm
+          todo={todo}
+          setTodo={setTodo}
+          onAddTodo={() => addTodoRequest()}
+        />
+      </Modal>
+
+      <ConfirmModal
+        isOpen={!!pickedTodo}
+        onClose={() => setPickedTodo(null)}
+        onConfirm={(isConfirmed) => {
+          if (!isConfirmed) return;
+          pickedTodo && deleteTodoRequest(pickedTodo.id);
+        }}
+      />
 
       <Error error={error} onClose={cleanError} />
     </Container>

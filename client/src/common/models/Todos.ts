@@ -5,3 +5,5 @@ export interface Todo {
   description?: string;
   important: boolean;
 }
+
+export type TodoBody = Omit<Todo, 'id'>;
