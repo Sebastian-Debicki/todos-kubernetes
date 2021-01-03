@@ -6,13 +6,19 @@ import Typography from '@material-ui/core/Typography';
 import Switch from '@material-ui/core/Switch';
 import FormControlLabel from '@material-ui/core/FormControlLabel';
 import FormGroup from '@material-ui/core/FormGroup';
+import { Button } from '@material-ui/core';
 
 interface Props {
   onChangeTheme: (isDarkTheme: boolean) => void;
+  onLogout: () => void;
   isDarkTheme: boolean;
 }
 
-export const Navbar: React.FC<Props> = ({ onChangeTheme, isDarkTheme }) => {
+export const Navbar: React.FC<Props> = ({
+  onChangeTheme,
+  isDarkTheme,
+  onLogout,
+}) => {
   const classes = useStyles();
 
   return (
@@ -35,6 +41,7 @@ export const Navbar: React.FC<Props> = ({ onChangeTheme, isDarkTheme }) => {
               label="Theme"
             />
           </FormGroup>
+          <Button onClick={onLogout}>Logout</Button>
         </Toolbar>
       </AppBar>
     </div>

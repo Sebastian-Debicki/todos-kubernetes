@@ -27,7 +27,7 @@ export const useRequest = <B, R, A>({
   /**
    * doRequest fn
    ** optional take one argument than you can get from url fn and onSuccess fn
-   ** e.q you need to pass id
+   ** this is useful e.q when you need to pass id
    */
   const doRequest = async (args?: A): Promise<R | undefined> => {
     try {
@@ -43,11 +43,12 @@ export const useRequest = <B, R, A>({
 
       return response.data;
     } catch (err) {
-      setError(
-        err.response.data.errors[0].message
-          ? err.response.data.errors[0].message
-          : 'Sorry! Some error occured!'
-      );
+      console.log(err);
+      // setError(
+      //   err.response.data.errors[0].message
+      //     ? err.response.data.errors[0].message
+      //     : 'Sorry! Some error occured!'
+      // );
     }
   };
 
