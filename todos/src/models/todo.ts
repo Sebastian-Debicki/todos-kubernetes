@@ -8,7 +8,7 @@ interface TodoAttrs {
   userId: string;
 }
 
-interface TodoDoc extends mongoose.Document {
+export interface TodoDoc extends mongoose.Document {
   title: string;
   subject: string;
   description: string;

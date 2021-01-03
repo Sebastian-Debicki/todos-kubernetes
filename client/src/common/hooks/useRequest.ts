@@ -43,11 +43,12 @@ export const useRequest = <B, R, A>({
 
       return response.data;
     } catch (err) {
-      setError(
-        err.response.data.errors[0].message
-          ? err.response.data.errors[0].message
-          : 'Sorry! Some error occured!'
-      );
+      console.log(err);
+      // setError(
+      //   err.response.data.errors[0].message
+      //     ? err.response.data.errors[0].message
+      //     : 'Sorry! Some error occured!'
+      // );
     }
   };
 

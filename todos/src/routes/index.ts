@@ -1,12 +1,16 @@
 import express, { Request, Response } from 'express';
-import { Todo } from '../models/todo';
+import { Todo, TodoDoc } from '../models/todo';
 
 const router = express.Router();
 
 router.get('/api/todos', async (req: Request, res: Response) => {
   const todos = await Todo.find({});
 
-  res.send(todos);
+  const onlyCurrentUserTodos = todos.filter(
+    (todo: TodoDoc) => todo.userId === req.currentUser?.id
+  );
+
+  res.send(onlyCurrentUserTodos);
 });
 
 export { router as indexTodoRouter };
