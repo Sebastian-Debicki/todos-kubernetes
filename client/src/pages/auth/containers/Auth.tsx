@@ -1,6 +1,12 @@
 import * as React from 'react';
 
-import { useRequest, Error, Credentials, UserResponse } from 'common';
+import {
+  useRequest,
+  Error,
+  Credentials,
+  UserResponse,
+  authService,
+} from 'common';
 import { restApiRoutes, routes } from 'core';
 import { useHistory } from 'react-router-dom';
 import {
@@ -26,26 +32,30 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
 
   const classes = useStyles();
 
-  const { doRequest, error, cleanError } = useRequest<
-    Credentials,
-    UserResponse,
-    void
-  >({
-    method: 'post',
-    url: () => (isLoginForm ? restApiRoutes.signin : restApiRoutes.signup),
-    body: {
-      email,
-      password,
-    },
-    onSuccess: () => {
-      onLoginSucceed();
-      history.push(routes.todos);
-    },
-  });
+  // const { doRequest, error, cleanError } = useRequest<
+  //   Credentials,
+  //   UserResponse,
+  //   void
+  // >({
+  //   method: 'post',
+  //   url: () => (isLoginForm ? restApiRoutes.signin : restApiRoutes.signup),
+  //   body: {
+  //     email,
+  //     password,
+  //   },
+  //   onSuccess: () => {
+  //     onLoginSucceed();
+  //     history.push(routes.todos);
+  //   },
+  // });
 
   const onSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
-    await doRequest();
+
+    await authService.login({ email, password }, isLoginForm).then(() => {
+      onLoginSucceed();
+      history.push(routes.todos);
+    });
   };
 
   return (
@@ -117,7 +127,7 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
         </Typography>
       </Box>
 
-      <Error error={error} onClose={cleanError} />
+      {/* <Error error={error} onClose={cleanError} /> */}
     </Container>
   );
 };
