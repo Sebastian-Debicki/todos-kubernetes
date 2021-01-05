@@ -10,6 +10,6 @@ export class HttpService {
   }
 
   DELETE<R>(url: string): Promise<R> {
-    return axios.post(url);
+    return axios.delete(url);
   }
 }
