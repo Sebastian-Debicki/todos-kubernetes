@@ -10,7 +10,7 @@ import { Todo } from '../models/todo';
 
 const router = express.Router();
 
-router.put(
+router.post(
   '/api/todos/:id',
   requireAuth,
   [

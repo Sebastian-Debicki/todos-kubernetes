@@ -15,6 +15,10 @@ export class TodosService {
     return this.httpService.POST(restApiRoutes.todos, todo);
   }
 
+  editTodo(todo: Todo, id: string): AxiosPromise<Todo> {
+    return this.httpService.POST(`${restApiRoutes.todos}/${id}`, todo);
+  }
+
   deleteTodo(id: string): AxiosPromise<void> {
     return this.httpService.DELETE(`${restApiRoutes.todos}/${id}`);
   }
