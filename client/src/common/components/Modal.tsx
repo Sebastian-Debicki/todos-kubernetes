@@ -32,11 +32,15 @@ export const Modal: React.FC<Props> = ({ children, isOpen, onClose }) => {
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
-      padding: theme.spacing(4),
+      padding: theme.spacing(3),
       outline: 'none',
       borderRadius: 8,
-      minWidth: 320,
+      minWidth: '90%',
       backgroundColor: theme.palette.secondary.main,
+      [theme.breakpoints.up('sm')]: {
+        padding: theme.spacing(4),
+        minWidth: 420,
+      },
     },
     modal: {
       display: 'flex',

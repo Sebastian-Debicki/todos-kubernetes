@@ -39,6 +39,8 @@ export const AddTodoForm: React.FC<Props> = ({ todo, setTodo, onAddTodo }) => {
           label="Description"
           name="description"
           onChange={(e) => setTodo({ ...todo, description: e.target.value })}
+          multiline
+          rows={4}
         />
         <TextField
           variant="outlined"

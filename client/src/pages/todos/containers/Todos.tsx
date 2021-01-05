@@ -1,8 +1,7 @@
 import * as React from 'react';
 import { Container, Button, Grid, makeStyles } from '@material-ui/core';
 
-import { useRequest, Error, Todo, Modal, TodoBody, ConfirmModal } from 'common';
-import { restApiRoutes } from 'core';
+import { Todo, Modal, TodoBody, ConfirmModal, todosService } from 'common';
 import { TodoCard } from '../components/TodoCard';
 import { AddTodoForm } from '../components/AddTodoForm';
 
@@ -19,51 +18,29 @@ export const Todos = () => {
 
   const classes = useStyles();
 
-  const { doRequest: addTodoRequest, error, cleanError } = useRequest<
-    TodoBody,
-    Todo,
-    void
-  >({
-    method: 'post',
-    url: () => restApiRoutes.todos,
-    body: {
-      title: todo.title,
-      description: todo.description,
-      subject: todo.subject,
-      important: todo.important,
-    },
-    onSuccess: (newTodo) => {
-      setTodos([...todos, newTodo]);
-      setTodo({
-        title: '',
-        description: '',
-        subject: '',
-        important: false,
-      });
+  const addTodoRequest = async () => {
+    await todosService.addTodo(todo).then(({ data: todo }) => {
       setIsModalOpen(false);
-    },
-  });
+      setTodos([...todos, todo]);
+    });
+    setTodo({
+      title: '',
+      description: '',
+      subject: '',
+      important: false,
+    });
+  };
 
-  const { doRequest: getTodosRequest } = useRequest<{}, Todo[], void>({
-    method: 'get',
-    url: () => restApiRoutes.todos,
-    body: {},
-    onSuccess: (todos) => setTodos(todos),
-  });
-
-  const { doRequest: deleteTodoRequest } = useRequest<{}, void, string>({
-    method: 'delete',
-    url: (id) => `${restApiRoutes.todos}/${id}`,
-    body: {},
-    onSuccess: (res, id) => {
+  const deleteTodoRequest = async (id: string) => {
+    await todosService.deleteTodo(id).then(() => {
       const filteredTodos = todos.filter((todo) => todo.id !== id);
       setTodos(filteredTodos);
-    },
-  });
+    });
+  };
 
   React.useEffect(() => {
-    getTodosRequest();
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+    todosService.getTodos().then(({ data }) => setTodos(data));
+  }, []);
 
   return (
     <Container>
@@ -101,7 +78,7 @@ export const Todos = () => {
         }}
       />
 
-      <Error error={error} onClose={cleanError} />
+      {/* <Error error={error} onClose={cleanError} /> */}
     </Container>
   );
 };
