@@ -1,13 +1,7 @@
 import * as React from 'react';
 
-import {
-  useRequest,
-  Error,
-  Credentials,
-  UserResponse,
-  authService,
-} from 'common';
-import { restApiRoutes, routes } from 'core';
+import { authService } from 'common';
+import { routes } from 'core';
 import { useHistory } from 'react-router-dom';
 import {
   Avatar,
@@ -31,23 +25,6 @@ export const Auth: React.FC<Props> = ({ onLoginSucceed }) => {
   const history = useHistory();
 
   const classes = useStyles();
-
-  // const { doRequest, error, cleanError } = useRequest<
-  //   Credentials,
-  //   UserResponse,
-  //   void
-  // >({
-  //   method: 'post',
-  //   url: () => (isLoginForm ? restApiRoutes.signin : restApiRoutes.signup),
-  //   body: {
-  //     email,
-  //     password,
-  //   },
-  //   onSuccess: () => {
-  //     onLoginSucceed();
-  //     history.push(routes.todos);
-  //   },
-  // });
 
   const onSubmitForm = async (e: React.FormEvent) => {
     e.preventDefault();
