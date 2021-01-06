@@ -1,5 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles';
-import { blueGrey, green, grey, purple } from '@material-ui/core/colors';
+import { green, purple } from '@material-ui/core/colors';
 
 export const theme = (isDarkTheme: boolean) =>
   createMuiTheme({
