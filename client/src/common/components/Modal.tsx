@@ -33,10 +33,10 @@ const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     container: {
       padding: theme.spacing(3),
-      outline: 'none',
+      backgroundColor: theme.palette.background.default,
       borderRadius: 8,
+      outline: 'none',
       minWidth: '90%',
-      backgroundColor: theme.palette.secondary.main,
       [theme.breakpoints.up('sm')]: {
         padding: theme.spacing(4),
         minWidth: 420,

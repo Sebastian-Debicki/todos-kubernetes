@@ -40,7 +40,7 @@ export const TodoCard: React.FC<Props> = ({ todo, onDelete, onEdit }) => {
             component="p"
             color="error"
           >
-            ! Important
+            Important
           </Typography>
         )}
       </CardContent>
