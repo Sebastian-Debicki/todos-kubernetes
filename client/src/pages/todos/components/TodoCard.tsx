@@ -11,9 +11,10 @@ import { Todo } from 'common/models';
 interface Props {
   todo: Todo;
   onDelete: () => void;
+  onEdit: () => void;
 }
 
-export const TodoCard: React.FC<Props> = ({ todo, onDelete }) => {
+export const TodoCard: React.FC<Props> = ({ todo, onDelete, onEdit }) => {
   const classes = useStyles();
 
   return (
@@ -32,24 +33,37 @@ export const TodoCard: React.FC<Props> = ({ todo, onDelete }) => {
         <Typography variant="body2" component="p">
           {todo.description}
         </Typography>
+        {todo.important && (
+          <Typography
+            className={classes.important}
+            variant="overline"
+            component="p"
+            color="error"
+          >
+            Important
+          </Typography>
+        )}
       </CardContent>
       <CardActions>
         <Button onClick={onDelete} size="small">
           Delete
+        </Button>
+        <Button onClick={onEdit} size="small">
+          Edit
         </Button>
       </CardActions>
     </Card>
   );
 };
 
-const useStyles = makeStyles({
+const useStyles = makeStyles((theme) => ({
   root: {
     minWidth: 275,
   },
   subject: {
     fontSize: 14,
   },
-  pos: {
-    marginBottom: 12,
+  important: {
+    marginTop: theme.spacing(1),
   },
-});
+}));

@@ -3,7 +3,7 @@ import { Container, Button, Grid, makeStyles } from '@material-ui/core';
 
 import { Todo, Modal, TodoBody, ConfirmModal, todosService } from 'common';
 import { TodoCard } from '../components/TodoCard';
-import { AddTodoForm } from '../components/AddTodoForm';
+import { TodoForm } from '../components/TodoForm';
 
 export const Todos = () => {
   const [todos, setTodos] = React.useState<Todo[]>([]);
@@ -14,13 +14,15 @@ export const Todos = () => {
     subject: '',
     important: false,
   });
-  const [isModalOpen, setIsModalOpen] = React.useState(false);
+  const [isAddModalOpen, setIsAddModalOpen] = React.useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
+  const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState(false);
 
   const classes = useStyles();
 
   const addTodoRequest = async () => {
     await todosService.addTodo(todo).then(({ data: todo }) => {
-      setIsModalOpen(false);
+      setIsAddModalOpen(false);
       setTodos([...todos, todo]);
     });
     setTodo({
@@ -28,6 +30,18 @@ export const Todos = () => {
       description: '',
       subject: '',
       important: false,
+    });
+  };
+
+  const editTodoRequest = async (id: string) => {
+    if (!pickedTodo) return;
+    await todosService.editTodo(pickedTodo, id).then(({ data: editedTodo }) => {
+      const editedTodos = todos.map((todo) =>
+        todo.id === editedTodo.id ? (todo = editedTodo) : todo
+      );
+      console.log(editedTodos);
+      setTodos(editedTodos);
+      setIsEditModalOpen(false);
     });
   };
 
@@ -46,7 +60,7 @@ export const Todos = () => {
     <Container>
       <Button
         className={classes.button}
-        onClick={() => setIsModalOpen(true)}
+        onClick={() => setIsAddModalOpen(true)}
         variant="contained"
         color="secondary"
       >
@@ -56,22 +70,40 @@ export const Todos = () => {
       <Grid container spacing={3}>
         {todos.map((todo) => (
           <Grid key={todo.id} item xs={12} sm={6} md={4}>
-            <TodoCard todo={todo} onDelete={() => setPickedTodo(todo)} />
+            <TodoCard
+              todo={todo}
+              onDelete={() => {
+                setPickedTodo(todo);
+                setIsConfirmModalOpen(true);
+              }}
+              onEdit={() => {
+                setPickedTodo(todo);
+                setIsEditModalOpen(true);
+              }}
+            />
           </Grid>
         ))}
       </Grid>
 
-      <Modal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)}>
-        <AddTodoForm
+      <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
+        <TodoForm
           todo={todo}
           setTodo={setTodo}
-          onAddTodo={() => addTodoRequest()}
+          onSubmit={() => addTodoRequest()}
+        />
+      </Modal>
+
+      <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
+        <TodoForm
+          todo={pickedTodo}
+          setTodo={setPickedTodo}
+          onSubmit={() => pickedTodo && editTodoRequest(pickedTodo.id)}
         />
       </Modal>
 
       <ConfirmModal
-        isOpen={!!pickedTodo}
-        onClose={() => setPickedTodo(null)}
+        isOpen={isConfirmModalOpen}
+        onClose={() => setIsConfirmModalOpen(false)}
         onConfirm={(isConfirmed) => {
           if (!isConfirmed) return;
           pickedTodo && deleteTodoRequest(pickedTodo.id);
