@@ -33,9 +33,9 @@ export const Todos = () => {
     });
   };
 
-  const editTodoRequest = async (id: string) => {
+  const editTodoRequest = async () => {
     if (!pickedTodo) return;
-    editTodo(pickedTodo, id);
+    editTodo(pickedTodo);
     setIsEditModalOpen(false);
   };
 
@@ -85,7 +85,7 @@ export const Todos = () => {
         <TodoForm
           todo={pickedTodo}
           setTodo={setPickedTodo}
-          onSubmit={() => pickedTodo && editTodoRequest(pickedTodo.id)}
+          onSubmit={() => editTodoRequest()}
         />
       </Modal>
 

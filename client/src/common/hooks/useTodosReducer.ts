@@ -14,7 +14,7 @@ type Action =
   | { type: ActionTypes.GET_TODO; payload: Todo[] }
   | { type: ActionTypes.ADD_TODO; payload: Todo }
   | { type: ActionTypes.DELETE_TODO; payload: string }
-  | { type: ActionTypes.EDIT_TODO; payload: Todo };
+  | { type: ActionTypes.EDIT_TODO; payload: { todo: Todo } };
 
 interface State {
   todos: Todo[];
@@ -40,7 +40,9 @@ export const useTodosReducer = () => {
       case ActionTypes.EDIT_TODO:
         return {
           todos: state.todos.map((todo) =>
-            todo.id === action.payload.id ? (todo = action.payload) : todo
+            todo.id === action.payload.todo.id
+              ? (todo = action.payload.todo)
+              : todo
           ),
         };
       default:
@@ -70,9 +72,12 @@ export const useTodosReducer = () => {
     });
   };
 
-  const editTodo = async (todo: Todo, id: string) => {
-    await todosService.editTodo(todo, id).then(({ data: editedTodo }) => {
-      dispatch({ type: ActionTypes.EDIT_TODO, payload: editedTodo });
+  const editTodo = async (todo: Todo) => {
+    await todosService.editTodo(todo).then(({ data }) => {
+      dispatch({
+        type: ActionTypes.EDIT_TODO,
+        payload: { todo: data },
+      });
     });
   };
 
