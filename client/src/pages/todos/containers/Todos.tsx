@@ -1,12 +1,12 @@
 import * as React from 'react';
 import { Container, Button, Grid, makeStyles } from '@material-ui/core';
 
-import { Todo, Modal, TodoBody, ConfirmModal, todosService } from 'common';
+import { Todo, Modal, TodoBody, ConfirmModal } from 'common';
 import { TodoCard } from '../components/TodoCard';
 import { TodoForm } from '../components/TodoForm';
+import { useTodosReducer } from 'common/hooks/useTodosReducer';
 
 export const Todos = () => {
-  const [todos, setTodos] = React.useState<Todo[]>([]);
   const [pickedTodo, setPickedTodo] = React.useState<Todo | null>(null);
   const [todo, setTodo] = React.useState<TodoBody>({
     title: '',
@@ -18,13 +18,13 @@ export const Todos = () => {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState(false);
 
+  const { state, getTodos, addTodo, deleteTodo, editTodo } = useTodosReducer();
+
   const classes = useStyles();
 
-  const addTodoRequest = async () => {
-    await todosService.addTodo(todo).then(({ data: todo }) => {
-      setIsAddModalOpen(false);
-      setTodos([...todos, todo]);
-    });
+  const addTodoRequest = () => {
+    addTodo(todo);
+    setIsAddModalOpen(false);
     setTodo({
       title: '',
       description: '',
@@ -35,25 +35,13 @@ export const Todos = () => {
 
   const editTodoRequest = async (id: string) => {
     if (!pickedTodo) return;
-    await todosService.editTodo(pickedTodo, id).then(({ data: editedTodo }) => {
-      const editedTodos = todos.map((todo) =>
-        todo.id === editedTodo.id ? (todo = editedTodo) : todo
-      );
-      console.log(editedTodos);
-      setTodos(editedTodos);
-      setIsEditModalOpen(false);
-    });
-  };
-
-  const deleteTodoRequest = async (id: string) => {
-    await todosService.deleteTodo(id).then(() => {
-      const filteredTodos = todos.filter((todo) => todo.id !== id);
-      setTodos(filteredTodos);
-    });
+    editTodo(pickedTodo, id);
+    setIsEditModalOpen(false);
   };
 
   React.useEffect(() => {
-    todosService.getTodos().then(({ data }) => setTodos(data));
+    getTodos();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -68,7 +56,7 @@ export const Todos = () => {
       </Button>
 
       <Grid container spacing={3}>
-        {todos.map((todo) => (
+        {state.todos.map((todo) => (
           <Grid key={todo.id} item xs={12} sm={6} md={4}>
             <TodoCard
               todo={todo}
@@ -106,7 +94,7 @@ export const Todos = () => {
         onClose={() => setIsConfirmModalOpen(false)}
         onConfirm={(isConfirmed) => {
           if (!isConfirmed) return;
-          pickedTodo && deleteTodoRequest(pickedTodo.id);
+          pickedTodo && deleteTodo(pickedTodo.id);
         }}
       />
 
