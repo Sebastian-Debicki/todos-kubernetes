@@ -18,12 +18,12 @@ export const Todos = () => {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState(false);
 
-  const { state, getTodos, addTodo, deleteTodo, editTodo } = useTodosReducer();
+  const { state, asyncActions } = useTodosReducer();
 
   const classes = useStyles();
 
   const addTodoRequest = () => {
-    addTodo(todo);
+    asyncActions.addTodo(todo);
     setIsAddModalOpen(false);
     setTodo({
       title: '',
@@ -35,14 +35,16 @@ export const Todos = () => {
 
   const editTodoRequest = async () => {
     if (!pickedTodo) return;
-    editTodo(pickedTodo);
+    asyncActions.editTodo(pickedTodo);
     setIsEditModalOpen(false);
   };
 
   React.useEffect(() => {
-    getTodos();
+    asyncActions.getTodos();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  console.log(state.error);
 
   return (
     <Container>
@@ -94,7 +96,7 @@ export const Todos = () => {
         onClose={() => setIsConfirmModalOpen(false)}
         onConfirm={(isConfirmed) => {
           if (!isConfirmed) return;
-          pickedTodo && deleteTodo(pickedTodo.id);
+          pickedTodo && asyncActions.deleteTodo(pickedTodo.id);
         }}
       />
 

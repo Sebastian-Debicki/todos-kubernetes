@@ -42,7 +42,7 @@ export const TodoForm: React.FC<Props> = ({ todo, setTodo, onSubmit }) => {
         <TextField
           variant="outlined"
           margin="normal"
-          required
+          // required
           fullWidth
           id="title"
           label="Title"
