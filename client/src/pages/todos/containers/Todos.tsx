@@ -44,8 +44,6 @@ export const Todos = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  console.log(state.error);
-
   return (
     <Container>
       <Button

@@ -7,15 +7,10 @@ import { Todos } from 'pages/todos/containers/Todos';
 
 interface Props {
   isUserLoggedIn: boolean;
-  onLoginSucceed: () => void;
 }
 
-export const Router: React.FC<Props> = ({ isUserLoggedIn, onLoginSucceed }) => {
-  const basicRoutes = (
-    <Route path={routes.login}>
-      {() => <Auth onLoginSucceed={onLoginSucceed} />}
-    </Route>
-  );
+export const Router: React.FC<Props> = ({ isUserLoggedIn }) => {
+  const basicRoutes = <Route path={routes.login} component={Auth} />;
 
   const protectedRoutes = <Route path={routes.todos} component={Todos} />;
 
