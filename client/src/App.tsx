@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { Router } from './Router';
 import { theme } from 'core';
-import { Navbar, useAuthReducer } from 'common';
+import { Credentials, Navbar, useAuthReducer } from 'common';
 
 function App() {
   const [isDarkTheme, setIsDarkTheme] = React.useState(true);
@@ -12,14 +12,11 @@ function App() {
 
   React.useEffect(() => {
     asyncActions.getCurrentUser();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onChangeTheme = (theme: boolean) => {
     setIsDarkTheme(theme);
   };
-
-  console.log(state.isUserLoggedIn);
 
   return (
     <>
@@ -30,7 +27,12 @@ function App() {
           isDarkTheme={isDarkTheme}
           onLogout={() => asyncActions.logout()}
         />
-        <Router isUserLoggedIn={state.isUserLoggedIn} />
+        <Router
+          isUserLoggedIn={state.isUserLoggedIn}
+          onLogin={(credentials: Credentials, isLoginForm: boolean) =>
+            asyncActions.auth(credentials, isLoginForm)
+          }
+        />
         {/* <Error error={error} onClose={cleanError} /> */}
       </ThemeProvider>
     </>

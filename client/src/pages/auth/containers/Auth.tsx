@@ -1,8 +1,6 @@
 import * as React from 'react';
 
-import { useAuthReducer } from 'common';
-import { routes } from 'core';
-import { useHistory } from 'react-router-dom';
+import { Credentials } from 'common';
 import {
   Avatar,
   Button,
@@ -14,20 +12,20 @@ import {
 } from '@material-ui/core';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
-export const Auth: React.FC = () => {
+interface Props {
+  onLogin: (credentials: Credentials, isLoginForm: boolean) => void;
+}
+
+export const Auth: React.FC<Props> = ({ onLogin }) => {
   const [isLoginForm, setIsLoginForm] = React.useState(true);
   const [email, setEmail] = React.useState('');
   const [password, setPassword] = React.useState('');
-  const history = useHistory();
-
-  const { asyncActions } = useAuthReducer();
 
   const classes = useStyles();
 
   const onSubmitForm = (e: React.FormEvent) => {
     e.preventDefault();
-    asyncActions.auth({ email, password }, isLoginForm);
-    history.push(routes.todos);
+    onLogin({ email, password }, isLoginForm);
   };
 
   return (

@@ -5,7 +5,8 @@ import { authService } from '../services';
 import {} from '../models';
 
 enum ActionTypes {
-  USER_AUTH = 'USER_AUTH',
+  USER_AUTH_REQUEST = 'USER_AUTH_REQUEST',
+  USER_AUTH_SUCCEED = 'USER_AUTH_SUCCEED',
   USER_AUTH_ERRORED = 'USER_AUTH_ERRORED',
   GET_CURRENT_USER = 'GET_CURRENT_USER',
   GET_CURRENT_USER_ERRORED = 'GET_CURRENT_USER_ERRORED',
@@ -14,7 +15,8 @@ enum ActionTypes {
 }
 
 type Action =
-  | { type: ActionTypes.USER_AUTH }
+  | { type: ActionTypes.USER_AUTH_REQUEST }
+  | { type: ActionTypes.USER_AUTH_SUCCEED }
   | { type: ActionTypes.USER_AUTH_ERRORED; payload: { error: string } }
   | { type: ActionTypes.GET_CURRENT_USER }
   | { type: ActionTypes.GET_CURRENT_USER_ERRORED; payload: { error: string } }
@@ -22,20 +24,24 @@ type Action =
   | { type: ActionTypes.LOGOUT_ERRORED; payload: { error: string } };
 
 interface State {
+  isLoading: boolean;
   isUserLoggedIn: boolean;
 }
 
 export const useAuthReducer = () => {
   const initialState: State = {
+    isLoading: false,
     isUserLoggedIn: false,
   };
 
   const reducer = (state: State, action: Action) => {
     switch (action.type) {
-      case ActionTypes.USER_AUTH:
-        return { ...state, isUserLoggedIn: true };
+      case ActionTypes.USER_AUTH_REQUEST:
+        return { ...state, isLoading: true };
+      case ActionTypes.USER_AUTH_SUCCEED:
+        return { ...state, isUserLoggedIn: true, isLoading: false };
       case ActionTypes.USER_AUTH_ERRORED:
-        return { ...state, error: action.payload.error };
+        return { ...state, error: action.payload.error, isLoading: false };
       case ActionTypes.GET_CURRENT_USER:
         return { ...state, isUserLoggedIn: true };
       case ActionTypes.GET_CURRENT_USER_ERRORED:
@@ -58,7 +64,7 @@ export const useAuthReducer = () => {
         isLoginForm
       )
       .then(() => {
-        dispatch({ type: ActionTypes.USER_AUTH });
+        dispatch({ type: ActionTypes.USER_AUTH_SUCCEED });
       })
       .catch((err) => {
         dispatch({
@@ -69,6 +75,7 @@ export const useAuthReducer = () => {
   };
 
   const getCurrentUser = async () => {
+    dispatch({ type: ActionTypes.USER_AUTH_REQUEST });
     await authService
       .getCurrentUser()
       .then(
