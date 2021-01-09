@@ -26,6 +26,7 @@ const App: React.FC = () => {
           onChangeTheme={onChangeTheme}
           isDarkTheme={isDarkTheme}
           onLogout={() => asyncActions.logout()}
+          isUserLoggedIn={state.isUserLoggedIn}
         />
         <Router
           isUserLoggedIn={state.isUserLoggedIn}

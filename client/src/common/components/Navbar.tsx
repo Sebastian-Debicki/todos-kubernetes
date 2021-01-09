@@ -12,12 +12,14 @@ interface Props {
   onChangeTheme: (isDarkTheme: boolean) => void;
   onLogout: () => void;
   isDarkTheme: boolean;
+  isUserLoggedIn: boolean;
 }
 
 export const Navbar: React.FC<Props> = ({
   onChangeTheme,
   isDarkTheme,
   onLogout,
+  isUserLoggedIn,
 }) => {
   const classes = useStyles();
 
@@ -41,7 +43,7 @@ export const Navbar: React.FC<Props> = ({
               label="Theme"
             />
           </FormGroup>
-          <Button onClick={onLogout}>Logout</Button>
+          {isUserLoggedIn && <Button onClick={onLogout}>Logout</Button>}
         </Toolbar>
       </AppBar>
     </div>

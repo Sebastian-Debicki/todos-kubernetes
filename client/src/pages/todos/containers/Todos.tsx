@@ -75,7 +75,9 @@ export const Todos = () => {
       <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
         <TodoForm
           todo={todo}
-          setTodo={setTodo}
+          onChangeTodo={(key: keyof TodoBody, value: string | boolean) =>
+            setTodo({ ...todo, [key]: value })
+          }
           onSubmit={() => addTodoRequest()}
         />
       </Modal>
@@ -83,7 +85,9 @@ export const Todos = () => {
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <TodoForm
           todo={pickedTodo}
-          setTodo={setPickedTodo}
+          onChangeTodo={(key: keyof TodoBody, value: string | boolean) =>
+            pickedTodo && setPickedTodo({ ...pickedTodo, [key]: value })
+          }
           onSubmit={() => editTodoRequest()}
         />
       </Modal>
