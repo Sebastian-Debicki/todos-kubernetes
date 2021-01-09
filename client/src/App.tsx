@@ -4,21 +4,15 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { Router } from './Router';
 import { theme } from 'core';
-import { Navbar, authService } from 'common';
+import { Credentials, Navbar, useAuthReducer } from 'common';
 
-function App() {
-  const [isUserLoggedIn, setIsUserLoggedIn] = React.useState(false);
+const App: React.FC = () => {
   const [isDarkTheme, setIsDarkTheme] = React.useState(true);
+  const { state, asyncActions } = useAuthReducer();
 
   React.useEffect(() => {
-    authService
-      .getCurrentUser()
-      .then(({ data }) => setIsUserLoggedIn(data.currentUser ? true : false));
+    asyncActions.getCurrentUser();
   }, []);
-
-  const onLogout = async () => {
-    await authService.logout().then(() => setIsUserLoggedIn(false));
-  };
 
   const onChangeTheme = (theme: boolean) => {
     setIsDarkTheme(theme);
@@ -31,16 +25,18 @@ function App() {
         <Navbar
           onChangeTheme={onChangeTheme}
           isDarkTheme={isDarkTheme}
-          onLogout={() => onLogout()}
+          onLogout={() => asyncActions.logout()}
         />
         <Router
-          isUserLoggedIn={isUserLoggedIn}
-          onLoginSucceed={() => setIsUserLoggedIn(true)}
+          isUserLoggedIn={state.isUserLoggedIn}
+          onLogin={(credentials: Credentials, isLoginForm: boolean) =>
+            asyncActions.auth(credentials, isLoginForm)
+          }
         />
         {/* <Error error={error} onClose={cleanError} /> */}
       </ThemeProvider>
     </>
   );
-}
+};
 
 export default App;
