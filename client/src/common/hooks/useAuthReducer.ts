@@ -1,11 +1,11 @@
-import { Credentials } from './../models/Auth';
 import { useReducer } from 'react';
 
+import { Credentials, ErrorResponse } from '../models';
 import { authService } from '../services';
-import {} from '../models';
+import { handleError } from '../helpers';
 
 enum ActionTypes {
-  USER_AUTH_SUCCEED = 'USER_AUTH_SUCCEED',
+  USER_AUTH = 'USER_AUTH',
   USER_AUTH_ERRORED = 'USER_AUTH_ERRORED',
   GET_CURRENT_USER = 'GET_CURRENT_USER',
   GET_CURRENT_USER_ERRORED = 'GET_CURRENT_USER_ERRORED',
@@ -14,7 +14,7 @@ enum ActionTypes {
 }
 
 type Action =
-  | { type: ActionTypes.USER_AUTH_SUCCEED }
+  | { type: ActionTypes.USER_AUTH }
   | { type: ActionTypes.USER_AUTH_ERRORED; payload: { error: string } }
   | { type: ActionTypes.GET_CURRENT_USER }
   | { type: ActionTypes.GET_CURRENT_USER_ERRORED; payload: { error: string } }
@@ -22,22 +22,21 @@ type Action =
   | { type: ActionTypes.LOGOUT_ERRORED; payload: { error: string } };
 
 interface State {
-  isLoading: boolean;
   isUserLoggedIn: boolean;
+  error?: string;
 }
 
 export const useAuthReducer = () => {
   const initialState: State = {
-    isLoading: false,
     isUserLoggedIn: false,
   };
 
   const reducer = (state: State, action: Action) => {
     switch (action.type) {
-      case ActionTypes.USER_AUTH_SUCCEED:
-        return { ...state, isUserLoggedIn: true, isLoading: false };
+      case ActionTypes.USER_AUTH:
+        return { ...state, isUserLoggedIn: true };
       case ActionTypes.USER_AUTH_ERRORED:
-        return { ...state, error: action.payload.error, isLoading: false };
+        return { ...state, error: action.payload.error };
       case ActionTypes.GET_CURRENT_USER:
         return { ...state, isUserLoggedIn: true };
       case ActionTypes.GET_CURRENT_USER_ERRORED:
@@ -54,19 +53,16 @@ export const useAuthReducer = () => {
   const [state, dispatch] = useReducer(reducer, initialState);
 
   const auth = async (credentials: Credentials, isLoginForm: boolean) => {
-    await authService
-      .login(
-        { email: credentials.email, password: credentials.password },
-        isLoginForm
-      )
+    const { email, password } = credentials;
+    return authService
+      .login({ email, password }, isLoginForm)
       .then(() => {
-        dispatch({ type: ActionTypes.USER_AUTH_SUCCEED });
+        dispatch({ type: ActionTypes.USER_AUTH });
       })
-      .catch((err) => {
-        console.log(err);
+      .catch((err: ErrorResponse) => {
         dispatch({
           type: ActionTypes.USER_AUTH_ERRORED,
-          payload: { error: err },
+          payload: { error: handleError(err) },
         });
       });
   };

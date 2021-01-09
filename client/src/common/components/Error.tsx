@@ -3,7 +3,7 @@ import { Snackbar } from '@material-ui/core';
 import MuiAlert from '@material-ui/lab/Alert';
 
 interface Props {
-  error: string | null;
+  error: string | undefined;
   onClose: () => void;
 }
 

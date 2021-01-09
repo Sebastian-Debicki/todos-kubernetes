@@ -4,7 +4,7 @@ import CssBaseline from '@material-ui/core/CssBaseline';
 
 import { Router } from './Router';
 import { theme } from 'core';
-import { Credentials, Navbar, useAuthReducer } from 'common';
+import { Credentials, Navbar, useAuthReducer, Error } from 'common';
 
 const App: React.FC = () => {
   const [isDarkTheme, setIsDarkTheme] = React.useState(true);
@@ -33,7 +33,7 @@ const App: React.FC = () => {
             asyncActions.auth(credentials, isLoginForm)
           }
         />
-        {/* <Error error={error} onClose={cleanError} /> */}
+        <Error error={state.error} onClose={() => console.log('dziala')} />
       </ThemeProvider>
     </>
   );
