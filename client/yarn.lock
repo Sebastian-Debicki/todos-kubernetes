@@ -1755,11 +1755,6 @@
   "resolved" "https://registry.yarnpkg.com/@types/node/-/node-14.14.2.tgz"
   "version" "14.14.2"
 
-"@types/node@^14.14.9":
-  "integrity" "sha512-JsoLXFppG62tWTklIoO4knA+oDTYsmqWxHRvd4lpmfQRNhX6osheUOWETP2jMoV/2bEHuMra8Pp3Dmo/stBFcw=="
-  "resolved" "https://registry.yarnpkg.com/@types/node/-/node-14.14.9.tgz"
-  "version" "14.14.9"
-
 "@types/normalize-package-data@^2.4.0":
   "integrity" "sha512-f5j5b/Gf71L+dbqxIpQ4Z2WlmI/mPJ0fOkGGmFgtb6sAu97EPczzbS3/tJKxmcYDj55OX6ssqwDAWOHIYDRDGA=="
   "resolved" "https://registry.yarnpkg.com/@types/normalize-package-data/-/normalize-package-data-2.4.0.tgz"

@@ -6,7 +6,7 @@ import { Router } from './Router';
 import { theme } from 'core';
 import { Credentials, Navbar, useAuthReducer } from 'common';
 
-function App() {
+const App: React.FC = () => {
   const [isDarkTheme, setIsDarkTheme] = React.useState(true);
   const { state, asyncActions } = useAuthReducer();
 
@@ -37,6 +37,6 @@ function App() {
       </ThemeProvider>
     </>
   );
-}
+};
 
 export default App;
