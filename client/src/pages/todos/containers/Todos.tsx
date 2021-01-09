@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Container, Button, Grid, makeStyles } from '@material-ui/core';
 
-import { Todo, Modal, TodoBody, ConfirmModal } from 'common';
+import { Todo, Modal, TodoBody, ConfirmModal, Error } from 'common';
 import { TodoCard } from '../components/TodoCard';
 import { TodoForm } from '../components/TodoForm';
 import { useTodosReducer } from 'common/hooks/useTodosReducer';
@@ -18,7 +18,7 @@ export const Todos = () => {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState(false);
 
-  const { state, asyncActions } = useTodosReducer();
+  const { state, asyncActions, cleanError } = useTodosReducer();
 
   const classes = useStyles();
 
@@ -75,7 +75,9 @@ export const Todos = () => {
       <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
         <TodoForm
           todo={todo}
-          setTodo={setTodo}
+          onChangeTodo={(key: keyof TodoBody, value: string | boolean) =>
+            setTodo({ ...todo, [key]: value })
+          }
           onSubmit={() => addTodoRequest()}
         />
       </Modal>
@@ -83,7 +85,9 @@ export const Todos = () => {
       <Modal isOpen={isEditModalOpen} onClose={() => setIsEditModalOpen(false)}>
         <TodoForm
           todo={pickedTodo}
-          setTodo={setPickedTodo}
+          onChangeTodo={(key: keyof TodoBody, value: string | boolean) =>
+            pickedTodo && setPickedTodo({ ...pickedTodo, [key]: value })
+          }
           onSubmit={() => editTodoRequest()}
         />
       </Modal>
@@ -97,7 +101,7 @@ export const Todos = () => {
         }}
       />
 
-      {/* <Error error={error} onClose={cleanError} /> */}
+      <Error error={state.error} onClose={cleanError} />
     </Container>
   );
 };

@@ -1,4 +1,4 @@
-import React, { Dispatch, SetStateAction } from 'react';
+import React from 'react';
 import {
   Button,
   Checkbox,
@@ -11,11 +11,16 @@ import { TodoBody } from 'common';
 
 interface Props {
   todo: TodoBody | null;
-  setTodo: Dispatch<SetStateAction<any>>;
+  onChangeTodo: (key: keyof TodoBody, value: string | boolean) => void;
   onSubmit: () => void;
 }
 
-export const TodoForm: React.FC<Props> = ({ todo, setTodo, onSubmit }) => {
+export const TodoForm: React.FC<Props> = ({
+  todo,
+
+  onSubmit,
+  onChangeTodo,
+}) => {
   const classes = useStyles();
 
   const submitHandler = (e: React.FormEvent) => {
@@ -34,20 +39,18 @@ export const TodoForm: React.FC<Props> = ({ todo, setTodo, onSubmit }) => {
           id="subject"
           label="Subject"
           name="subject"
-          onChange={(e) =>
-            todo && setTodo({ ...todo, subject: e.target.value })
-          }
+          onChange={(e) => onChangeTodo('subject', e.target.value)}
           value={todo?.subject}
         />
         <TextField
           variant="outlined"
           margin="normal"
-          // required
+          required
           fullWidth
           id="title"
           label="Title"
           name="title"
-          onChange={(e) => todo && setTodo({ ...todo, title: e.target.value })}
+          onChange={(e) => onChangeTodo('title', e.target.value)}
           value={todo?.title}
         />
         <TextField
@@ -58,9 +61,7 @@ export const TodoForm: React.FC<Props> = ({ todo, setTodo, onSubmit }) => {
           id="description"
           label="Description"
           name="description"
-          onChange={(e) =>
-            todo && setTodo({ ...todo, description: e.target.value })
-          }
+          onChange={(e) => onChangeTodo('description', e.target.value)}
           multiline
           rows={3}
           value={todo?.description}
@@ -69,9 +70,7 @@ export const TodoForm: React.FC<Props> = ({ todo, setTodo, onSubmit }) => {
           control={
             <Checkbox
               checked={todo?.important}
-              onChange={(e) =>
-                todo && setTodo({ ...todo, important: e.target.checked })
-              }
+              onChange={(e) => onChangeTodo('important', e.target.checked)}
               name="important"
               color="primary"
               value={todo?.important}

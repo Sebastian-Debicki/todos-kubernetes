@@ -1,7 +1,8 @@
 import { useReducer } from 'react';
 
 import { todosService } from '../services';
-import { Todo, TodoBody } from '../models';
+import { Todo, TodoBody, ErrorResponse } from '../models';
+import { handleError } from '../helpers';
 
 enum ActionTypes {
   GET_TODO = 'GET_TODO',
@@ -12,6 +13,7 @@ enum ActionTypes {
   DELETE_TODO_ERRORED = 'DELETE_TODO_ERRORED',
   EDIT_TODO = 'EDIT_TODO',
   EDIT_TODO_ERRORED = 'EDIT_TODO_ERRORED',
+  CLEAN_ERROR = 'CLEAN_ERROR',
 }
 
 type Action =
@@ -22,11 +24,12 @@ type Action =
   | { type: ActionTypes.DELETE_TODO; payload: { id: string } }
   | { type: ActionTypes.DELETE_TODO_ERRORED; payload: { error: string } }
   | { type: ActionTypes.EDIT_TODO; payload: { todo: Todo } }
-  | { type: ActionTypes.EDIT_TODO_ERRORED; payload: { error: string } };
+  | { type: ActionTypes.EDIT_TODO_ERRORED; payload: { error: string } }
+  | { type: ActionTypes.CLEAN_ERROR };
 
 interface State {
   todos: Todo[];
-  error?: any;
+  error?: string;
 }
 
 export const useTodosReducer = () => {
@@ -58,6 +61,8 @@ export const useTodosReducer = () => {
               : todo
           ),
         };
+      case ActionTypes.CLEAN_ERROR:
+        return { ...state, error: undefined };
       default:
         throw new Error();
     }
@@ -71,10 +76,10 @@ export const useTodosReducer = () => {
       .then(({ data }) =>
         dispatch({ type: ActionTypes.GET_TODO, payload: { todos: data } })
       )
-      .catch((err) =>
+      .catch((err: ErrorResponse) =>
         dispatch({
           type: ActionTypes.GET_TODO_ERRORED,
-          payload: { error: err },
+          payload: { error: handleError(err) },
         })
       );
   };
@@ -85,10 +90,10 @@ export const useTodosReducer = () => {
       .then(({ data }) => {
         dispatch({ type: ActionTypes.ADD_TODO, payload: { todo: data } });
       })
-      .catch((err) => {
+      .catch((err: ErrorResponse) => {
         dispatch({
           type: ActionTypes.ADD_TODO_ERRORED,
-          payload: { error: err.errors },
+          payload: { error: handleError(err) },
         });
       });
   };
@@ -99,10 +104,10 @@ export const useTodosReducer = () => {
       .then(() => {
         dispatch({ type: ActionTypes.DELETE_TODO, payload: { id } });
       })
-      .catch((err) =>
+      .catch((err: ErrorResponse) =>
         dispatch({
           type: ActionTypes.DELETE_TODO_ERRORED,
-          payload: { error: err },
+          payload: { error: handleError(err) },
         })
       );
   };
@@ -116,13 +121,21 @@ export const useTodosReducer = () => {
           payload: { todo: data },
         });
       })
-      .catch((err) =>
+      .catch((err: ErrorResponse) =>
         dispatch({
           type: ActionTypes.ADD_TODO_ERRORED,
-          payload: { error: err },
+          payload: { error: handleError(err) },
         })
       );
   };
 
-  return { state, asyncActions: { getTodos, addTodo, deleteTodo, editTodo } };
+  const cleanError = () => {
+    dispatch({ type: ActionTypes.CLEAN_ERROR });
+  };
+
+  return {
+    state,
+    cleanError,
+    asyncActions: { getTodos, addTodo, deleteTodo, editTodo },
+  };
 };

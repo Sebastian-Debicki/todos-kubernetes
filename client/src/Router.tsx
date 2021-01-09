@@ -1,5 +1,5 @@
 import React from 'react';
-import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
+import { BrowserRouter, Switch, Route } from 'react-router-dom';
 
 import { routes } from 'core';
 import { Credentials } from 'common';
@@ -20,7 +20,6 @@ export const Router: React.FC<Props> = ({ isUserLoggedIn, onLogin }) => {
 
   return (
     <BrowserRouter>
-      <Redirect to={isUserLoggedIn ? routes.todos : routes.login} />
       <Switch>{isUserLoggedIn ? protectedRoutes : basicRoutes}</Switch>
     </BrowserRouter>
   );
