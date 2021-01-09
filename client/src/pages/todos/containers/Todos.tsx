@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Container, Button, Grid, makeStyles } from '@material-ui/core';
 
-import { Todo, Modal, TodoBody, ConfirmModal } from 'common';
+import { Todo, Modal, TodoBody, ConfirmModal, Error } from 'common';
 import { TodoCard } from '../components/TodoCard';
 import { TodoForm } from '../components/TodoForm';
 import { useTodosReducer } from 'common/hooks/useTodosReducer';
@@ -18,7 +18,7 @@ export const Todos = () => {
   const [isEditModalOpen, setIsEditModalOpen] = React.useState(false);
   const [isConfirmModalOpen, setIsConfirmModalOpen] = React.useState(false);
 
-  const { state, asyncActions } = useTodosReducer();
+  const { state, asyncActions, cleanError } = useTodosReducer();
 
   const classes = useStyles();
 
@@ -97,7 +97,7 @@ export const Todos = () => {
         }}
       />
 
-      {/* <Error error={error} onClose={cleanError} /> */}
+      <Error error={state.error} onClose={cleanError} />
     </Container>
   );
 };

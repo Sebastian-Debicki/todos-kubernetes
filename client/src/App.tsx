@@ -8,7 +8,7 @@ import { Credentials, Navbar, useAuthReducer, Error } from 'common';
 
 const App: React.FC = () => {
   const [isDarkTheme, setIsDarkTheme] = React.useState(true);
-  const { state, asyncActions } = useAuthReducer();
+  const { state, asyncActions, cleanError } = useAuthReducer();
 
   React.useEffect(() => {
     asyncActions.getCurrentUser();
@@ -33,7 +33,7 @@ const App: React.FC = () => {
             asyncActions.auth(credentials, isLoginForm)
           }
         />
-        <Error error={state.error} onClose={() => console.log('dziala')} />
+        <Error error={state.error} onClose={cleanError} />
       </ThemeProvider>
     </>
   );

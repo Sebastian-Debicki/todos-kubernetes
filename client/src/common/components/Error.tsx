@@ -10,10 +10,9 @@ interface Props {
 export const Error: React.FC<Props> = ({ error, onClose }) => (
   <Snackbar
     open={!!error}
-    autoHideDuration={4000}
+    autoHideDuration={5000}
     onClose={onClose}
     anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
-    key={error}
   >
     <MuiAlert variant="filled" severity="error">
       {error}
