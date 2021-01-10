@@ -1,7 +1,9 @@
 name: tests-todos
 
-on: 
-  pull_request
+on:
+  push:
+    paths:
+      - 'todos/**'
 
 jobs:
   build:
