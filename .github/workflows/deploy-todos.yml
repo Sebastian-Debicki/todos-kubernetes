@@ -1,0 +1,25 @@
+name: deploy-todos
+
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - 'todos/**'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: cd todos && docker build -t ssebaa9/todos .
+      - run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
+          DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
+      - run: docker push ssebaa9/todos
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{secrets.DIGITAL_OCEAN_ACCESS_TOKEN}}
+      - run: doctl kubernetes cluster kubeconfig save todos
+      - run: kubectl rollout restart deployment todos-depl
