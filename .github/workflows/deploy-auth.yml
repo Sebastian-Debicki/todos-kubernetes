@@ -18,3 +18,8 @@ jobs:
           key: DOCKER_USERNAME: ${{secrets.DOCKER_USERNAME}}
           key: DOCKER_PASSWORD: ${{secrets.DOCKER_PASSWORD}}
       - run: docker push ssebaa9/auth
+      - uses: digitalocean/action-doctl@v2
+        with:
+          token: ${{secrets.DIGITAL_OCEAN_ACCESS_TOKEN}}
+      - run: doctl kubernetes cluster kubeconfig save todos
+      - run: kubectl rollout restart deployment auth-depl
