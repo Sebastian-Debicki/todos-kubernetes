@@ -1,13 +1,13 @@
-name: tests-todos
+name: tests-client
 
 on:
   pull_request:
     paths:
-      - 'todos/**'
+      - 'client/**'
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - run: cd todos && npm install
+      - run: cd client && npm install && npm run lint
