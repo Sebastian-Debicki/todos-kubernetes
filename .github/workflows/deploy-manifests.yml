@@ -16,5 +16,4 @@ jobs:
         with:
           token: ${{secrets.DIGITAL_OCEAN_ACCESS_TOKEN}}
       - run: doctl kubernetes cluster kubeconfig save todos
-      - run: kubectl rollout restart deployment auth-depl
       - run: kubectl apply -f infra/k8s && kubectl apply -f infra/k8s-prod
