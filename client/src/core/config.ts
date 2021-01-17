@@ -9,6 +9,6 @@ export const restApiRoutes = {
 };
 
 export const routes = {
-  login: '/auth',
-  todos: '/',
+  auth: '/',
+  todos: '/todos',
 };

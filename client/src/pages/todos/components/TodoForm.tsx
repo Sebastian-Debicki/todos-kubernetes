@@ -15,12 +15,7 @@ interface Props {
   onSubmit: () => void;
 }
 
-export const TodoForm: React.FC<Props> = ({
-  todo,
-
-  onSubmit,
-  onChangeTodo,
-}) => {
+export const TodoForm: React.FC<Props> = ({ todo, onSubmit, onChangeTodo }) => {
   const classes = useStyles();
 
   const submitHandler = (e: React.FormEvent) => {
@@ -84,7 +79,7 @@ export const TodoForm: React.FC<Props> = ({
           color="secondary"
           type="submit"
         >
-          Add todo
+          Submit
         </Button>
       </div>
     </form>

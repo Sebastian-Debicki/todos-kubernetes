@@ -1,7 +1,6 @@
 import React from 'react';
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles';
 import MaterialModal from '@material-ui/core/Modal';
-import Backdrop from '@material-ui/core/Backdrop';
 
 interface Props {
   isOpen: boolean;
@@ -13,16 +12,7 @@ export const Modal: React.FC<Props> = ({ children, isOpen, onClose }) => {
 
   return (
     <div>
-      <MaterialModal
-        className={classes.modal}
-        open={isOpen}
-        onClose={onClose}
-        closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
-      >
+      <MaterialModal className={classes.modal} open={isOpen} onClose={onClose}>
         <div className={classes.container}>{children}</div>
       </MaterialModal>
     </div>
@@ -34,7 +24,7 @@ const useStyles = makeStyles((theme: Theme) =>
     container: {
       padding: theme.spacing(3),
       backgroundColor: theme.palette.background.default,
-      borderRadius: 8,
+      borderRadius: theme.shape.borderRadius,
       outline: 'none',
       minWidth: '90%',
       [theme.breakpoints.up('sm')]: {
