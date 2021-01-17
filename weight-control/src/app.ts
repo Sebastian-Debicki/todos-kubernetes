@@ -1,7 +1,7 @@
 import express from 'express';
 import cookieSession from 'cookie-session';
 import { json } from 'body-parser';
-import { currentUser } from '@ssebaa9/common';
+import { currentUser, errorHandler, NotFoundError } from '@ssebaa9/common';
 
 import { periodsListRouter } from './routes/index';
 import { periodRouter } from './routes/newPeriod';
@@ -20,5 +20,11 @@ app.use(currentUser);
 
 app.use(periodsListRouter);
 app.use(periodRouter);
+
+app.all('*', async (req, res) => {
+  throw new NotFoundError();
+});
+
+app.use(errorHandler);
 
 export { app };

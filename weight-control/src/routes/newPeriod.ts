@@ -4,7 +4,7 @@ import { Period } from '../models/period';
 
 const router = express.Router();
 
-router.post('/api/period', async (req: Request, res: Response) => {
+router.post('/api/periods', async (req: Request, res: Response) => {
   const { name, from, to, bodyWeights } = req.body;
 
   const period = await Period.build({
