@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weight-control-mongo-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weight-control-mongo
+  template:
+    metadata:
+      labels:
+        app: weight-control-mongo
+    spec:
+      containers:
+        - name: weight-control-mongo
+          image: mongo
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weight-control-mongo-srv
+spec:
+  selector:
+    app: weight-control-mongo
+  ports:
+    - name: db
+      protocol: TCP
+      port: 27017
+      targetPort: 27017
