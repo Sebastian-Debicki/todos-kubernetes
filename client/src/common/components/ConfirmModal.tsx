@@ -29,6 +29,9 @@ export const ConfirmModal: React.FC<Props> = ({
           Are you sure?
         </Typography>
         <Button
+          className={classes.leftButton}
+          color="primary"
+          variant="contained"
           onClick={() => {
             onConfirm(true);
             onClose();
@@ -38,6 +41,8 @@ export const ConfirmModal: React.FC<Props> = ({
           Yes
         </Button>
         <Button
+          color="primary"
+          variant="contained"
           onClick={() => {
             onConfirm(false);
             onClose();
@@ -61,6 +66,9 @@ const useStyles = makeStyles((theme: Theme) =>
     title: {
       width: '100%',
       marginBottom: theme.spacing(3),
+    },
+    leftButton: {
+      marginRight: theme.spacing(3),
     },
   })
 );

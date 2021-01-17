@@ -1,5 +1,11 @@
 import * as React from 'react';
-import { Container, Button, Grid, makeStyles } from '@material-ui/core';
+import {
+  Container,
+  Button,
+  Grid,
+  makeStyles,
+  Typography,
+} from '@material-ui/core';
 
 import { Todo, Modal, TodoBody, ConfirmModal, Error } from 'common';
 import { TodoCard } from '../components/TodoCard';
@@ -54,23 +60,29 @@ export const Todos = () => {
         Add todo
       </Button>
 
-      <Grid container spacing={3}>
-        {state.todos.map((todo) => (
-          <Grid key={todo.id} item xs={12} sm={6} md={4}>
-            <TodoCard
-              todo={todo}
-              onDelete={() => {
-                setPickedTodo(todo);
-                setIsConfirmModalOpen(true);
-              }}
-              onEdit={() => {
-                setPickedTodo(todo);
-                setIsEditModalOpen(true);
-              }}
-            />
-          </Grid>
-        ))}
-      </Grid>
+      {state.todos.length ? (
+        <Grid container spacing={3}>
+          {state.todos.map((todo) => (
+            <Grid key={todo.id} item xs={12} sm={6} md={4}>
+              <TodoCard
+                todo={todo}
+                onDelete={() => {
+                  setPickedTodo(todo);
+                  setIsConfirmModalOpen(true);
+                }}
+                onEdit={() => {
+                  setPickedTodo(todo);
+                  setIsEditModalOpen(true);
+                }}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      ) : (
+        <Typography variant="h6" className={classes.noTodoText}>
+          You have nothing to do...
+        </Typography>
+      )}
 
       <Modal isOpen={isAddModalOpen} onClose={() => setIsAddModalOpen(false)}>
         <TodoForm
@@ -109,5 +121,8 @@ export const Todos = () => {
 const useStyles = makeStyles((theme) => ({
   button: {
     margin: theme.spacing(3, 0),
+  },
+  noTodoText: {
+    fontStyle: 'italic',
   },
 }));

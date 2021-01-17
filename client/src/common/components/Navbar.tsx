@@ -43,7 +43,11 @@ export const Navbar: React.FC<Props> = ({
               label="Theme"
             />
           </FormGroup>
-          {isUserLoggedIn && <Button onClick={onLogout}>Logout</Button>}
+          {isUserLoggedIn && (
+            <Button color="inherit" onClick={onLogout}>
+              Logout
+            </Button>
+          )}
         </Toolbar>
       </AppBar>
     </div>
