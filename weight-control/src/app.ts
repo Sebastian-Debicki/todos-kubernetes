@@ -3,8 +3,8 @@ import cookieSession from 'cookie-session';
 import { json } from 'body-parser';
 import { currentUser, errorHandler, NotFoundError } from '@ssebaa9/common';
 
-import { periodsListRouter } from './routes/index';
-import { periodRouter } from './routes/newPeriod';
+import { weightsRouter } from './routes/index';
+import { newWeightRouter } from './routes/new';
 
 const app = express();
 
@@ -18,8 +18,8 @@ app.use(
 );
 app.use(currentUser);
 
-app.use(periodsListRouter);
-app.use(periodRouter);
+app.use(weightsRouter);
+app.use(newWeightRouter);
 
 app.all('*', async (req, res) => {
   throw new NotFoundError();

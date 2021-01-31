@@ -18,7 +18,7 @@ spec:
             backend:
               serviceName: todos-srv
               servicePort: 3000
-          - path: /api/periods/?(.*)
+          - path: /api/weights/?(.*)
             backend:
               serviceName: weight-control-srv
               servicePort: 3000
