@@ -1,0 +1,38 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weight-control-depl
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: weight-control
+  template:
+    metadata:
+      labels:
+        app: weight-control
+    spec:
+      containers:
+        - name: weight-control
+          image: ssebaa9/weight-control
+          env:
+            - name: MONGO_URI
+              value: 'mongodb://weight-control-mongo-srv:27017/weight-control'
+            - name: JWT_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: jwt-secret
+                  key: JWT_KEY
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: weight-control-srv
+spec:
+  selector:
+    app: weight-control
+  ports:
+    - name: weight-control
+      protocol: TCP
+      port: 3000
+      targetPort: 3000
