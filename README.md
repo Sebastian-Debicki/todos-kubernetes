@@ -1,16 +1,16 @@
 # Todos with kubernetes
 
-Simple todos, app created for learning basics of kubernetes, nodejs and martial UI.  
+Simple todos, app created for learning basics of kubernetes, nodejs and martial UI.
 
 ### Most important technologies
 
-* React
-* MaterialUI
-* Node.js
-* Express
-* Kubernetes
-* Docker
-* Github actions
+- React
+- MaterialUI
+- Node.js
+- Express
+- Kubernetes
+- Docker
+- Github actions
 
 ### How to run dev
 
@@ -23,7 +23,7 @@ Install ingress-nginx:
 $ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v0.43.0/deploy/static/provider/cloud/deploy.yaml
 ```
 
-More information about instalation ingres-nginx you can find:
+More information about instalation (also linux) ingres-nginx you can find:
 https://kubernetes.github.io/ingress-nginx/deploy/#provider-specific-steps
 
 Create secret key:
@@ -36,20 +36,22 @@ $ kubectl get secrets
 ```
 
 Create link for developer mode:
+
 ```sh
-Open file from your console: 
+# Open file from your console:
 #mack and linux
 $ vim etc/hosts
 
 #windows
 $ vim C:\Windows\System32\Drivers\etc\hosts
 
-Paste on the bottom of the file:
+# Paste on the bottom of the file:
 $ 127.0.0.1 todos.pl
-And save (if you want to modify this file you must open it with sudo permissions)
+# And save (if you want to modify this file you must open it with sudo permissions)
 ```
 
 Run (in the root project directory):
+
 ```sh
 $ skaffold dev
 ```
