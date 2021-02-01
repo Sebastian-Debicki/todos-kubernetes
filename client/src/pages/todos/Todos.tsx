@@ -8,8 +8,8 @@ import {
 } from '@material-ui/core';
 
 import { Todo, Modal, TodoBody, ConfirmModal, Error } from 'common';
-import { TodoCard } from '../components/TodoCard';
-import { TodoForm } from '../components/TodoForm';
+import { TodoCard } from './components/TodoCard';
+import { TodoForm } from './components/TodoForm';
 import { useTodosReducer } from 'common/hooks/useTodosReducer';
 
 export const Todos = () => {

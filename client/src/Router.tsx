@@ -3,8 +3,7 @@ import { BrowserRouter, Switch, Route, Redirect } from 'react-router-dom';
 
 import { routes } from 'core';
 import { Credentials } from 'common';
-import { Auth } from 'pages/auth/containers/Auth';
-import { Todos } from 'pages/todos/containers/Todos';
+import { Auth, Todos } from 'pages';
 
 interface Props {
   isUserLoggedIn: boolean;
